@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LuaGuard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>LuaGuard</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="https://discord.gg/tKF8gCw5qp" class="nav-link discord-link" target="_blank">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+                <div class="user-menu">
+                    <i class="fas fa-user-circle"></i>
+                    <span>User123</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#overview" class="sidebar-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#scripts" class="sidebar-item">
+                    <i class="fas fa-file-code"></i>
+                    <span>Scripts</span>
+                </a>
+                <a href="#keys" class="sidebar-item">
+                    <i class="fas fa-key"></i>
+                    <span>License Keys</span>
+                </a>
+                <a href="#obfuscation" class="sidebar-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Obfuscation</span>
+                </a>
+                <a href="#analytics" class="sidebar-item">
+                    <i class="fas fa-analytics"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#whitelist" class="sidebar-item">
+                    <i class="fas fa-list"></i>
+                    <span>Whitelist</span>
+                </a>
+                <a href="#settings" class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome back! Here's your account summary.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-code"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Protected Scripts</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>248</h3>
+                            <p>Active Keys</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,432</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>$2,847</h3>
+                            <p>Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trial Status -->
+                <div class="trial-status">
+                    <div class="trial-card">
+                        <div class="trial-header">
+                            <h3>Free Trial Status</h3>
+                            <span class="trial-badge">14 Days Remaining</span>
+                        </div>
+                        <div class="trial-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 53%"></div>
+                            </div>
+                            <p>16 out of 30 days used</p>
+                        </div>
+                        <a href="pricing.html" class="btn btn-primary">Upgrade Now</a>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>New License Key Generated</h4>
+                                <p>Key: LG-****-****-A7F2 created for Script #8</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>Script Obfuscated</h4>
+                                <p>premium_script.lua successfully protected</p>
+                                <span class="activity-time">5 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h4>New User Registration</h4>
+                                <p>User purchased Script #3 license</p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scripts Section -->
+            <section id="scripts" class="dashboard-section">
+                <div class="section-header">
+                    <h1>Script Management</h1>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Upload New Script
+                    </button>
+                </div>
+
+                <div class="scripts-grid">
+                    <div class="script-card">
+                        <div class="script-header">
+                            <h3>premium_executor.lua</h3>
+                            <div class="script-status active">Active</div>
+                        </div>
+                        <div class="script-stats">
+                            <div class="script-stat">
+                                <span class="stat-label">Keys:</span>
+                                <span class="stat-value">45</span>
+                            </div>
+                            <div class="script-stat">
+                                <span class="stat-label">Users:</span>
+                                <span class="stat-value">128</span>
+                            </div>
+                            <div class="script-stat">
+                                <span class="stat-label">Revenue:</span>
+                                <span class="stat-value">$890</span>
+                            </div>
+                        </div>
+                        <div class="script-actions">
+                            <button class="btn btn-small">Edit</button>
+                            <button class="btn btn-small btn-secondary">Download</button>
+                            <button class="btn btn-small btn-danger">Delete</button>
+                        </div>
+                    </div>
+
+                    <div class="script-card">
+                        <div class="script-header">
+                            <h3>advanced_script.lua</h3>
+                            <div class="script-status active">Active</div>
+                        </div>
+                        <div class="script-stats">
+                            <div class="script-stat">
+                                <span class="stat-label">Keys:</span>
+                                <span class="stat-value">23</span>
+                            </div>
+                            <div class="script-stat">
+                                <span class="stat-label">Users:</span>
+                                <span class="stat-value">67</span>
+                            </div>
+                            <div class="script-stat">
+                                <span class="stat-label">Revenue:</span>
+                                <span class="stat-value">$340</span>
+                            </div>
+                        </div>
+                        <div class="script-actions">
+                            <button class="btn btn-small">Edit</button>
+                            <button class="btn btn-small btn-secondary">Download</button>
+                            <button class="btn btn-small btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Keys Section -->
+            <section id="keys" class="dashboard-section">
+                <div class="section-header">
+                    <h1>License Key Management</h1>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Generate New Key
+                    </button>
+                </div>
+
+                <div class="keys-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Script</th>
+                                <th>User</th>
+                                <th>Expires</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="key-cell">LG-2F4A-8B9C-7E1D</td>
+                                <td>premium_executor.lua</td>
+                                <td>user@example.com</td>
+                                <td>2025-09-22</td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-small">Edit</button>
+                                    <button class="btn btn-small btn-danger">Revoke</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="key-cell">LG-9A3C-5D6E-4F2B</td>
+                                <td>advanced_script.lua</td>
+                                <td>demo@test.com</td>
+                                <td>2025-08-25</td>
+                                <td><span class="status-badge expired">Expired</span></td>
+                                <td>
+                                    <button class="btn btn-small">Renew</button>
+                                    <button class="btn btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Lua Script</h2>
+            <form class="upload-form">
+                <div class="form-group">
+                    <label for="script-name">Script Name</label>
+                    <input type="text" id="script-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="script-file">Lua File</label>
+                    <div class="file-upload">
+                        <input type="file" id="script-file" accept=".lua" required>
+                        <label for="script-file" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Choose Lua File
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="protection-level">Protection Level</label>
+                    <select id="protection-level">
+                        <option value="basic">Basic Protection</option>
+                        <option value="advanced">Advanced Protection</option>
+                        <option value="premium">Premium Protection</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Obfuscate & Protect</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

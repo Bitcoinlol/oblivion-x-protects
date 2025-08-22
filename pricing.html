@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - LuaGuard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pricing.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>LuaGuard</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="pricing.html" class="nav-link active">Pricing</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="https://discord.gg/tKF8gCw5qp" class="nav-link discord-link" target="_blank">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+                <a href="#login" class="nav-btn login-btn">Login</a>
+                <a href="#signup" class="nav-btn signup-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Pricing Hero -->
+    <section class="pricing-hero">
+        <div class="container">
+            <div class="pricing-header">
+                <h1>Choose Your Protection Plan</h1>
+                <p>Start with a 30-day free trial, then choose the plan that fits your needs</p>
+                <div class="billing-toggle">
+                    <span class="toggle-label">Monthly</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="billingToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">Yearly <span class="discount">-20%</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="pricing-plans">
+        <div class="container">
+            <div class="plans-grid">
+                <!-- Free Trial -->
+                <div class="pricing-card trial-card">
+                    <div class="plan-badge">30-Day Free Trial</div>
+                    <div class="plan-header">
+                        <h3>Starter</h3>
+                        <div class="plan-price">
+                            <span class="price">$0</span>
+                            <span class="period">for 30 days</span>
+                        </div>
+                        <p>Perfect for trying out LuaGuard</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>5 Scripts</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>50 License Keys</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Basic Obfuscation</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>HWID Protection</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Discord Support</span>
+                        </div>
+                        <div class="feature disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Advanced Analytics</span>
+                        </div>
+                        <div class="feature disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Custom URLs</span>
+                        </div>
+                    </div>
+                    <button class="plan-btn btn btn-secondary">Start Free Trial</button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Pro</h3>
+                        <div class="plan-price">
+                            <span class="price" data-monthly="$19" data-yearly="$15.20">$19</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <p>For growing developers and small teams</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>25 Scripts</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>500 License Keys</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced Obfuscation</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>HWID Protection</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Priority Support</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced Analytics</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Branding</span>
+                        </div>
+                        <div class="feature disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Dedicated Support</span>
+                        </div>
+                    </div>
+                    <button class="plan-btn btn btn-primary">Choose Pro</button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="pricing-card premium-card">
+                    <div class="plan-badge">Most Popular</div>
+                    <div class="plan-header">
+                        <h3>Premium</h3>
+                        <div class="plan-price">
+                            <span class="price" data-monthly="$49" data-yearly="$39.20">$49</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <p>For serious developers and businesses</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>100 Scripts</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>5,000 License Keys</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Premium Obfuscation</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced HWID Protection</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>24/7 Priority Support</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Real-time Analytics</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom URLs & Branding</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>API Access</span>
+                        </div>
+                    </div>
+                    <button class="plan-btn btn btn-primary">Choose Premium</button>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Enterprise</h3>
+                        <div class="plan-price">
+                            <span class="price">Custom</span>
+                            <span class="period">pricing</span>
+                        </div>
+                        <p>For large organizations with custom needs</p>
+                    </div>
+                    <div class="plan-features">
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Unlimited Scripts</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Unlimited Keys</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Obfuscation</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>On-premises Deployment</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Dedicated Support Manager</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Integrations</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>SLA Guarantee</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check"></i>
+                            <span>Priority Features</span>
+                        </div>
+                    </div>
+                    <button class="plan-btn btn btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h4>How does the 30-day free trial work?</h4>
+                        <p>Sign up and get instant access to all Starter plan features for 30 days. No credit card required. After the trial ends, you can upgrade to a paid plan or your account will be suspended.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>What happens when my trial expires?</h4>
+                        <p>Your account will be suspended until you purchase a subscription. Your data remains safe and will be restored when you upgrade.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Can I upgrade or downgrade at any time?</h4>
+                        <p>Yes! You can change your plan at any time. Upgrades take effect immediately, while downgrades take effect at the next billing cycle.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Do you offer refunds?</h4>
+                        <p>We offer a 14-day money-back guarantee for all paid plans if you're not satisfied with our service.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>Is there a setup fee?</h4>
+                        <p>No setup fees, no hidden costs. You only pay for your chosen plan at the displayed price.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>How secure is my code?</h4>
+                        <p>We use enterprise-grade encryption and never store your original source code. All obfuscation happens in secure, isolated environments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>LuaGuard</span>
+                    </div>
+                    <p>Advanced Lua script protection and monetization platform.</p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/tKF8gCw5qp" target="_blank">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#documentation">Documentation</a></li>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                        <li><a href="https://discord.gg/tKF8gCw5qp" target="_blank">Discord Support</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#security">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LuaGuard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="pricing.js"></script>
+</body>
+</html>

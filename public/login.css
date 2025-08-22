@@ -1,0 +1,316 @@
+/* Login-specific styles */
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a0a 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.back-link {
+    color: #c4c4c4;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #9333ea;
+}
+
+.login-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.login-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    border-radius: 16px;
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.login-card-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-card-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-card-header p {
+    color: #c4c4c4;
+    font-size: 1rem;
+}
+
+.login-form {
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    margin-bottom: 2rem;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(147, 51, 234, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #9333ea;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.input-group input::placeholder {
+    color: #666;
+}
+
+.input-help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #888;
+}
+
+.login-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-free {
+    background: transparent;
+    color: #c4c4c4;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-free:hover {
+    border-color: #9333ea;
+    color: #9333ea;
+    background: rgba(147, 51, 234, 0.1);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    transform: none;
+}
+
+.login-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.login-footer a {
+    color: #9333ea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Notification Panel */
+.notification-panel, .error-panel {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid #27ca3f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transform: translateX(450px);
+    transition: all 0.3s ease;
+}
+
+.error-panel {
+    border-color: #ff5f56;
+}
+
+.notification-panel.show, .error-panel.show {
+    transform: translateX(0);
+}
+
+.notification-content, .error-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.notification-icon, .error-icon {
+    width: 24px;
+    height: 24px;
+    background: #27ca3f;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.error-icon {
+    background: #ff5f56;
+}
+
+.notification-text h3, .error-text h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-text p, .error-text p {
+    margin: 0;
+    color: #c4c4c4;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.notification-close, .error-close {
+    background: none;
+    border: none;
+    color: #c4c4c4;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: color 0.3s ease;
+}
+
+.notification-close:hover, .error-close:hover {
+    color: #ffffff;
+}
+
+/* Security Features */
+.security-features {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #c4c4c4;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.security-icon {
+    font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 2rem;
+        margin: 1rem;
+    }
+    
+    .login-header {
+        padding: 1rem;
+    }
+    
+    .notification-panel, .error-panel {
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+        transform: translateY(-200px);
+    }
+    
+    .notification-panel.show, .error-panel.show {
+        transform: translateY(0);
+    }
+    
+    .security-features {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+/* Hidden utility class */
+.hidden {
+    display: none !important;
+}

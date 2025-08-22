@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EnigmaCode</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <header class="login-header">
+            <div class="logo">
+                <svg class="shield-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L4 6V12C4 18 12 22 12 22S20 18 20 12V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>EnigmaCode</span>
+            </div>
+            <a href="/" class="back-link">← Back to Home</a>
+        </header>
+
+        <!-- Main Login Section -->
+        <main class="login-main">
+            <div class="login-card">
+                <div class="login-card-header">
+                    <h1>Access Dashboard</h1>
+                    <p>Enter your key to access the EnigmaCode platform</p>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="input-group">
+                        <label for="apiKey">API Key</label>
+                        <input 
+                            type="text" 
+                            id="apiKey" 
+                            name="apiKey" 
+                            placeholder="Enter your API key..."
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <div class="input-help">
+                            Don't have a key? Get a free 30-day trial key below.
+                        </div>
+                    </div>
+
+                    <div class="login-buttons">
+                        <button type="submit" class="btn btn-primary" id="loginBtn">
+                            <span class="btn-text">Login</span>
+                            <div class="btn-loader hidden">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-free" id="getFreeKeyBtn">
+                            Get a Free Key
+                        </button>
+                    </div>
+                </form>
+
+                <div class="login-footer">
+                    <p>Need help? <a href="#support">Contact Support</a></p>
+                </div>
+            </div>
+
+            <!-- Notification Panel -->
+            <div id="notificationPanel" class="notification-panel hidden">
+                <div class="notification-content">
+                    <div class="notification-icon">✓</div>
+                    <div class="notification-text">
+                        <h3>Key Generated Successfully!</h3>
+                        <p id="notificationMessage">Your free 30-day key has been copied to your clipboard.</p>
+                    </div>
+                    <button class="notification-close" id="closeNotification">×</button>
+                </div>
+            </div>
+
+            <!-- Error Panel -->
+            <div id="errorPanel" class="error-panel hidden">
+                <div class="error-content">
+                    <div class="error-icon">⚠</div>
+                    <div class="error-text">
+                        <h3>Error</h3>
+                        <p id="errorMessage">An error occurred. Please try again.</p>
+                    </div>
+                    <button class="error-close" id="closeError">×</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Security Features -->
+        <div class="security-features">
+            <div class="security-item">
+                <div class="security-icon">🔒</div>
+                <span>End-to-End Encryption</span>
+            </div>
+            <div class="security-item">
+                <div class="security-icon">🛡️</div>
+                <span>Tamper Protection</span>
+            </div>
+            <div class="security-item">
+                <div class="security-icon">⚡</div>
+                <span>Real-Time Validation</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Disable right-click and developer tools
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+                (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const apiKeyInput = document.getElementById('apiKey');
+        const loginBtn = document.getElementById('loginBtn');
+        const getFreeKeyBtn = document.getElementById('getFreeKeyBtn');
+        const notificationPanel = document.getElementById('notificationPanel');
+        const errorPanel = document.getElementById('errorPanel');
+        const closeNotification = document.getElementById('closeNotification');
+        const closeError = document.getElementById('closeError');
+
+        // Utility functions
+        function showLoader(button) {
+            const btnText = button.querySelector('.btn-text');
+            const btnLoader = button.querySelector('.btn-loader');
+            btnText.style.opacity = '0';
+            btnLoader.classList.remove('hidden');
+            button.disabled = true;
+        }
+
+        function hideLoader(button) {
+            const btnText = button.querySelector('.btn-text');
+            const btnLoader = button.querySelector('.btn-loader');
+            btnText.style.opacity = '1';
+            btnLoader.classList.add('hidden');
+            button.disabled = false;
+        }
+
+        function showNotification(message) {
+            document.getElementById('notificationMessage').textContent = message;
+            notificationPanel.classList.remove('hidden');
+            notificationPanel.classList.add('show');
+            
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+
+        function hideNotification() {
+            notificationPanel.classList.remove('show');
+            setTimeout(() => {
+                notificationPanel.classList.add('hidden');
+            }, 300);
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            errorPanel.classList.remove('hidden');
+            errorPanel.classList.add('show');
+        }
+
+        function hideError() {
+            errorPanel.classList.remove('show');
+            setTimeout(() => {
+                errorPanel.classList.add('hidden');
+            }, 300);
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                return new Promise((resolve, reject) => {
+                    document.execCommand('copy') ? resolve() : reject();
+                    textArea.remove();
+                });
+            }
+        }
+
+        // Event listeners
+        closeNotification.addEventListener('click', hideNotification);
+        closeError.addEventListener('click', hideError);
+
+        // Login form submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const apiKey = apiKeyInput.value.trim();
+            
+            if (!apiKey) {
+                showError('Please enter your API key.');
+                return;
+            }
+
+            showLoader(loginBtn);
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ key: apiKey })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store the token
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userKey', apiKey);
+                    
+                    // Redirect to dashboard
+                    window.location.href = '/dashboard';
+                } else {
+                    showError(data.error || 'Login failed. Please check your key.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Network error. Please check your connection and try again.');
+            } finally {
+                hideLoader(loginBtn);
+            }
+        });
+
+        // Get free key button
+        getFreeKeyBtn.addEventListener('click', async function() {
+            showLoader(getFreeKeyBtn);
+
+            try {
+                const response = await fetch('/api/generate-free-key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Copy key to clipboard
+                    await copyToClipboard(data.key);
+                    
+                    // Fill the input with the generated key
+                    apiKeyInput.value = data.key;
+                    
+                    // Show success notification
+                    showNotification(`Your free 30-day key has been copied to your clipboard and filled in the form above. You can now click "Login" to access your dashboard.`);
+                    
+                } else {
+                    showError(data.error || 'Failed to generate free key. You may have already generated one.');
+                }
+            } catch (error) {
+                console.error('Free key generation error:', error);
+                showError('Network error. Please check your connection and try again.');
+            } finally {
+                hideLoader(getFreeKeyBtn);
+            }
+        });
+
+        // Auto-focus on key input
+        window.addEventListener('load', function() {
+            apiKeyInput.focus();
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                // Verify token is still valid
+                fetch('/api/dashboard', {
+                    headers: {
+                        'x-api-key': localStorage.getItem('userKey')
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        // Clear invalid token
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('userKey');
+                    }
+                })
+                .catch(() => {
+                    // Clear token on error
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userKey');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EnigmaCode</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg class="shield-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L4 6V12C4 18 12 22 12 22S20 18 20 12V6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>EnigmaCode</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-info">
+                    <div class="key-expiry">
+                        <span class="expiry-label">Key expires:</span>
+                        <span id="keyExpiry" class="expiry-date">Loading...</span>
+                    </div>
+                    <button class="coin-button" id="coinButton">
+                        <svg class="coin-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Payments
+                    </button>
+                    <button class="logout-button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="dashboard-main">
+            <!-- Sidebar -->
+            <aside class="dashboard-sidebar">
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-tab="dashboard">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                            <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                            <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                            <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Dashboard
+                    </button>
+                    
+                    <button class="nav-item" data-tab="projects">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                            <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Projects
+                    </button>
+                    
+                    <button class="nav-item" data-tab="settings">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Settings
+                    </button>
+                    
+                    <button class="nav-item admin-only hidden" data-tab="admin">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Generate Keys
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="dashboard-content">
+                <!-- Dashboard Tab -->
+                <div id="dashboardTab" class="tab-content active">
+                    <div class="tab-header">
+                        <h1>Dashboard Overview</h1>
+                        <p>Monitor your account activity and project statistics</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📁</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalScripts">0</div>
+                                <div class="stat-label">Total Scripts</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalActiveUsers">0</div>
+                                <div class="stat-label">Total Active Users</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🔑</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalKeysCreated">0</div>
+                                <div class="stat-label">Total Keys Created</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">🚫</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalKeysBanned">0</div>
+                                <div class="stat-label">Total Keys Banned</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Feed -->
+                    <div class="activity-section">
+                        <h2>Activity Feed</h2>
+                        <div class="activity-feed" id="activityFeed">
+                            <div class="activity-item loading">
+                                <div class="activity-icon">⏳</div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Loading activities...</div>
+                                    <div class="activity-time">Just now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Tab -->
+                <div id="projectsTab" class="tab-content">
+                    <div class="tab-header">
+                        <h1>Projects</h1>
+                        <button class="btn btn-primary" id="createProjectBtn">Create Project</button>
+                    </div>
+
+                    <div class="projects-grid" id="projectsGrid">
+                        <div class="empty-state">
+                            <div class="empty-icon">📁</div>
+                            <h3>No projects yet</h3>
+                            <p>Create your first project to get started</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settingsTab" class="tab-content">
+                    <div class="tab-header">
+                        <h1>Settings</h1>
+                        <p>Manage your account and preferences</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <!-- Profile Section -->
+                        <div class="settings-card">
+                            <h3>Profile</h3>
+                            <div class="profile-section">
+                                <div class="roblox-profile" id="robloxProfile">
+                                    <div class="profile-placeholder">
+                                        <div class="profile-icon">👤</div>
+                                        <p>Enter your Roblox username below to display your profile</p>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="robloxUsername">Roblox Username</label>
+                                    <input type="text" id="robloxUsername" placeholder="Enter your Roblox username">
+                                    <button class="btn btn-secondary" id="saveUsernameBtn">Save Username</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subscription Details -->
+                        <div class="settings-card">
+                            <h3>Subscription Details</h3>
+                            <div class="subscription-info">
+                                <div class="sub-detail">
+                                    <span class="sub-label">Plan:</span>
+                                    <span class="sub-value" id="currentPlan">Free</span>
+                                </div>
+                                <div class="sub-detail">
+                                    <span class="sub-label">Key expires:</span>
+                                    <span class="sub-value" id="keyExpirySettings">Loading...</span>
+                                </div>
+                                <div class="sub-detail">
+                                    <span class="sub-label">Whitelisted users:</span>
+                                    <span class="sub-value" id="whitelistedCount">0</span>
+                                </div>
+                                <div class="sub-detail">
+                                    <span class="sub-label">Blacklisted users:</span>
+                                    <span class="sub-value" id="blacklistedCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab (Owner Only) -->
+                <div id="adminTab" class="tab-content">
+                    <div class="tab-header">
+                        <h1>Generate Keys</h1>
+                        <p>Create keys for customers (Admin Only)</p>
+                    </div>
+
+                    <div class="admin-grid">
+                        <div class="admin-card">
+                            <h3>Free Plan (30 Days)</h3>
+                            <button class="btn btn-primary" data-plan="free">Generate Free Key</button>
+                        </div>
+                        
+                        <div class="admin-card">
+                            <h3>Standard Plan (1 Year)</h3>
+                            <button class="btn btn-primary" data-plan="standard">Generate Standard Key</button>
+                        </div>
+                        
+                        <div class="admin-card">
+                            <h3>Premium Plan (1 Year)</h3>
+                            <button class="btn btn-primary" data-plan="premium">Generate Premium Key</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div id="createProjectModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <form id="createProjectForm" class="modal-form">
+                <div class="input-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" placeholder="Enter project name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="scriptFile">Script File (.txt)</label>
+                    <input type="file" id="scriptFile" accept=".txt" required>
+                    <div class="file-info">Upload a .txt file containing your Lua script</div>
+                </div>
+                
+                <div class="project-type-section">
+                    <h3>Project Type</h3>
+                    <div class="type-buttons">
+                        <button type="button" class="type-btn" data-type="free-for-all">
+                            <div class="type-icon">🌐</div>
+                            <div class="type-content">
+                                <h4>Free for All</h4>
+                                <p>Anyone with the loader can run your script</p>
+                            </div>
+                        </button>
+                        
+                        <button type="button" class="type-btn" data-type="user-management">
+                            <div class="type-icon">👥</div>
+                            <div class="type-content">
+                                <h4>User Management</h4>
+                                <p>Control access with whitelist/blacklist</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" id="cancelCreate">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitCreate">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Management Modal -->
+    <div id="projectManagementModal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="managementModalTitle">Manage Project</h2>
+                <button class="modal-close" id="closeManagementModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="management-tabs">
+                    <button class="management-tab active" data-tab="loader">Loader</button>
+                    <button class="management-tab" data-tab="users">Manage Users</button>
+                </div>
+                
+                <div id="loaderTab" class="management-content active">
+                    <div class="loader-actions">
+                        <button class="btn btn-primary" id="downloadLoader">Download Loader</button>
+                        <button class="btn btn-secondary" id="copyLoader">Copy Loader</button>
+                        <button class="btn btn-danger" id="deleteProject">Delete Project</button>
+                    </div>
+                </div>
+                
+                <div id="usersTab" class="management-content">
+                    <div class="user-management">
+                        <div class="input-group">
+                            <label for="robloxUserId">Roblox User ID</label>
+                            <input type="text" id="robloxUserId" placeholder="Enter Roblox User ID">
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-success" id="whitelistUser">Whitelist</button>
+                            <button class="btn btn-danger" id="blacklistUser">Blacklist</button>
+                        </div>
+                        
+                        <div class="user-lists">
+                            <div class="user-list-section">
+                                <h4>Whitelisted Users</h4>
+                                <div class="user-list" id="whitelistedUsers">
+                                    <div class="empty-list">No whitelisted users</div>
+                                </div>
+                            </div>
+                            
+                            <div class="user-list-section">
+                                <h4>Blacklisted Users</h4>
+                                <div class="user-list" id="blacklistedUsers">
+                                    <div class="empty-list">No blacklisted users</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upgrade Your Plan</h2>
+                <button class="modal-close" id="closePaymentModal">×</button>
+            </div>
+            <div class="payment-options">
+                <div class="payment-card">
+                    <h3>Standard Plan</h3>
+                    <div class="price">$9.99/month</div>
+                    <button class="btn btn-primary">Purchase via Roblox</button>
+                </div>
+                
+                <div class="payment-card featured">
+                    <h3>Premium Plan</h3>
+                    <div class="price">$19.99/month</div>
+                    <button class="btn btn-primary">Purchase via Roblox</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
