@@ -1,6 +1,17 @@
 // LuaGuard Frontend JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for sections
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+
     // Modal functionality
     const loginModal = document.getElementById('loginModal');
     const signupModal = document.getElementById('signupModal');
@@ -99,6 +110,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 20);
     }
 
+    // Free trial function
+    function getFreeTrial() {
+        if (localStorage.getItem('freeTrialUsed')) {
+            showToast('You already have a key sorry', 'error');
+            return;
+        }
+        
+        OblivionXAPI.getFreeTrial().then(result => {
+            if (result.success) {
+                // Copy to clipboard
+                navigator.clipboard.writeText(result.key).then(() => {
+                    showToast('Copied 30 day free api key', 'success');
+                    localStorage.setItem('freeTrialUsed', 'true');
+                    localStorage.setItem('freeTrialKey', result.key);
+                }).catch(() => {
+                    showToast('Failed to copy key. Please copy manually: ' + result.key, 'error');
+                });
+            }
+        });
+    }
+
     // Intersection Observer for animations
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -171,62 +203,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// API simulation functions
-class LuaGuardAPI {
-    static async login(email, password) {
-        // Simulate API call
+// Oblivion X Protects API functions
+class OblivionXAPI {
+    static async getFreeTrial() {
+        // Simulate free trial generation
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve({
-                    success: true,
-                    token: 'mock_jwt_token',
-                    user: { email, username: 'user123' }
-                });
-            }, 1000);
-        });
-    }
-
-    static async signup(email, password, username) {
-        // Simulate API call
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    success: true,
-                    message: '30-day free trial activated!',
-                    trial_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-                });
-            }, 1000);
-        });
-    }
-
-    static async generateKey(scriptId, duration = 30) {
-        // Simulate key generation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const key = `LG-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+                const key = `OX_30D_${Math.random().toString(36).substr(2, 16).toUpperCase()}`;
                 resolve({
                     success: true,
                     key: key,
-                    expires: new Date(Date.now() + duration * 24 * 60 * 60 * 1000)
+                    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
                 });
             }, 500);
         });
     }
 
-    static async obfuscateScript(scriptContent, protectionLevel = 'basic') {
-        // Simulate obfuscation
+    static async obfuscateScript(scriptContent) {
+        // Simulate advanced obfuscation
         return new Promise((resolve) => {
             setTimeout(() => {
-                const obfuscated = `-- Protected by LuaGuard\nlocal ${Math.random().toString(36).substr(2, 10)} = function()\n    return "${Buffer.from(scriptContent).toString('base64').substr(0, 50)}..."\nend`;
+                const obfuscated = `-- Protected by Oblivion X Protects\nlocal _0x${Math.random().toString(36).substr(2, 8)} = function()\n    return "${Buffer.from(scriptContent).toString('base64').substr(0, 50)}..."\nend`;
                 resolve({
                     success: true,
                     obfuscated: obfuscated,
-                    protection_level: protectionLevel
+                    protection_level: 'advanced'
                 });
             }, 2000);
+        });
+    }
+
+    static async createProject(projectData) {
+        // Simulate project creation
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    success: true,
+                    projectId: Date.now(),
+                    loadstring: `loadstring(game:HttpGet("https://api.oblivionxprotects.com/files/v3/loaders/${Date.now()}.lua"))()`
+                });
+            }, 1000);
         });
     }
 }
 
 // Export for use in other files
-window.LuaGuardAPI = LuaGuardAPI;
+window.OblivionXAPI = OblivionXAPI;

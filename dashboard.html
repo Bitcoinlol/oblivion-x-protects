@@ -227,46 +227,263 @@
                     <p>Get your obfuscated code in seconds with our optimized processing engine</p>
                 </div>
             </div>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
+        </div>
     </div>
 
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="modal">
+    <!-- Discord Bot Tab -->
+    <div id="discord-bot" class="tab-content">
+        <div class="discord-header">
+            <h2>Discord Bot Management</h2>
+            <p>Manage your Discord bot and whitelist administrators</p>
+        </div>
+
+        <div class="discord-info">
+            <div class="bot-details">
+                <h3>Bot Information</h3>
+                <div class="bot-stats">
+                    <div class="bot-stat">
+                        <span class="stat-label">Client ID:</span>
+                        <span class="stat-value">1407376197771595816</span>
+                        <button class="copy-btn" onclick="copyToClipboard('1407376197771595816')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="bot-stat">
+                        <span class="stat-label">Public Key:</span>
+                        <span class="stat-value">58e2272f9bc57aa23c9217410b10229bbb68c43627d6484e083907ad0a27989e</span>
+                        <button class="copy-btn" onclick="copyToClipboard('58e2272f9bc57aa23c9217410b10229bbb68c43627d6484e083907ad0a27989e')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-management">
+                <h3>Discord Admin Management</h3>
+                <div class="admin-form">
+                    <div class="form-group">
+                        <label for="adminDiscordId">Discord Admin User ID</label>
+                        <div class="input-group">
+                            <input type="text" id="adminDiscordId" placeholder="Enter Discord User ID">
+                            <button type="button" class="add-admin-btn" onclick="addDiscordAdmin()">
+                                <i class="fas fa-plus"></i>
+                                Add Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-list">
+                    <h4>Current Admins</h4>
+                    <div class="admin-items" id="adminList">
+                        <!-- Admin items will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="bot-commands">
+                <h3>Available Commands</h3>
+                <div class="commands-grid">
+                    <div class="command-card">
+                        <h4>/whitelist [user]</h4>
+                        <p>Whitelist a Discord user for bot access</p>
+                    </div>
+                    <div class="command-card">
+                        <h4>/blacklist [user]</h4>
+                        <p>Blacklist a Discord user from bot access</p>
+                    </div>
+                    <div class="command-card">
+                        <h4>/generate key</h4>
+                        <p>Generate a random key for redemption</p>
+                    </div>
+                    <div class="command-card">
+                        <h4>/panel</h4>
+                        <p>Create a panel with file uploader and role management</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IP Addresses Tab -->
+    <div id="ip-addresses" class="tab-content">
+        <div class="ip-header">
+            <h2>IP Address Management</h2>
+            <p>Track and manage IP addresses accessing your account</p>
+        </div>
+
+        <div class="ip-controls">
+            <div class="ip-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="allowMultipleLogins">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">Allow multiple users to login to your account</span>
+            </div>
+        </div>
+
+        <div class="ip-list">
+            <h3>IP Addresses</h3>
+            <div class="ip-items" id="ipList">
+                <!-- IP items will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Tab -->
+    <div id="status" class="tab-content">
+        <div class="status-header">
+            <h2>Script Performance Status</h2>
+            <p>Monitor your script performance based on user activity</p>
+        </div>
+
+        <div class="status-chart">
+            <canvas id="statusChart" width="800" height="400"></canvas>
+        </div>
+
+        <div class="status-metrics">
+            <div class="metric-card">
+                <h4>Performance Score</h4>
+                <div class="metric-value" id="performanceScore">0</div>
+            </div>
+            <div class="metric-card">
+                <h4>Trend</h4>
+                <div class="metric-value" id="trend">Stable</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Plan API Keys Tab (Owner Only) -->
+    <div id="generate-keys" class="tab-content">
+        <div class="keys-header">
+            <h2>Generate Plan API Keys</h2>
+            <p>Generate API keys for different subscription plans</p>
+        </div>
+
+        <div class="keys-grid">
+            <div class="key-plan">
+                <h3>1 Month Plan</h3>
+                <button class="generate-key-btn" onclick="generatePlanKey('1month')">
+                    Generate 1 Month Key
+                </button>
+            </div>
+            <div class="key-plan">
+                <h3>5 Months Plan</h3>
+                <button class="generate-key-btn" onclick="generatePlanKey('5months')">
+                    Generate 5 Months Key
+                </button>
+            </div>
+            <div class="key-plan">
+                <h3>1 Year Plan</h3>
+                <button class="generate-key-btn" onclick="generatePlanKey('1year')">
+                    Generate 1 Year Key
+                </button>
+            </div>
+            <div class="key-plan">
+                <h3>2 Years Plan</h3>
+                <button class="generate-key-btn" onclick="generatePlanKey('2years')">
+                    Generate 2 Years Key
+                </button>
+            </div>
+        </div>
+
+        <div class="generated-keys">
+            <h3>Generated Keys</h3>
+            <div class="keys-list" id="generatedKeysList">
+                <!-- Generated keys will be listed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div id="createProjectModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Upload Lua Script</h2>
-            <form class="upload-form">
+            <div class="modal-header">
+                <h2>Create New Project</h2>
+                <button class="close-modal" onclick="closeModal('createProjectModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="createProjectForm">
                 <div class="form-group">
-                    <label for="script-name">Script Name</label>
-                    <input type="text" id="script-name" required>
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" required placeholder="Enter your project name">
                 </div>
                 <div class="form-group">
-                    <label for="script-file">Lua File</label>
-                    <div class="file-upload">
-                        <input type="file" id="script-file" accept=".lua" required>
-                        <label for="script-file" class="file-upload-label">
+                    <label for="projectFile">Lua Script File</label>
+                    <div class="file-upload-area">
+                        <input type="file" id="projectFile" accept=".txt" required>
+                        <label for="projectFile" class="file-label">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            Choose Lua File
+                            Choose .txt file
                         </label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="protection-level">Protection Level</label>
-                    <select id="protection-level">
-                        <option value="basic">Basic Protection</option>
-                        <option value="advanced">Advanced Protection</option>
-                        <option value="premium">Premium Protection</option>
-                    </select>
+                    <label>Project Type</label>
+                    <div class="project-type-buttons">
+                        <button type="button" class="type-btn active" data-type="freeforall">
+                            <i class="fas fa-globe"></i>
+                            Free for All
+                        </button>
+                        <button type="button" class="type-btn" data-type="usermanagement">
+                            <i class="fas fa-users"></i>
+                            User Management
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Obfuscate & Protect</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Create Project</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal('createProjectModal')">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
+
+    <!-- User Management Modal -->
+    <div id="userManagementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>User Management</h2>
+                <button class="close-modal" onclick="closeModal('userManagementModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="user-management-tabs">
+                <button class="tab-btn active" data-tab="whitelist">Whitelist</button>
+                <button class="tab-btn" data-tab="blacklist">Blacklist</button>
+            </div>
+            
+            <div id="whitelistTab" class="tab-content active">
+                <div class="form-group">
+                    <label for="whitelistUserId">Roblox User ID</label>
+                    <div class="input-group">
+                        <input type="text" id="whitelistUserId" placeholder="Enter Roblox User ID">
+                        <button type="button" class="btn-primary" onclick="addWhitelistUser()">Send</button>
+                    </div>
+                </div>
+                <div class="user-list" id="whitelistUsers">
+                    <!-- Whitelisted users will be listed here -->
+                </div>
+            </div>
+
+            <div id="blacklistTab" class="tab-content">
+                <div class="form-group">
+                    <label for="blacklistUserId">Roblox User ID</label>
+                    <div class="input-group">
+                        <input type="text" id="blacklistUserId" placeholder="Enter Roblox User ID">
+                        <button type="button" class="btn-primary" onclick="addBlacklistUser()">Send</button>
+                    </div>
+                </div>
+                <div class="user-list" id="blacklistUsers">
+                    <!-- Blacklisted users will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
 
     <script src="analytics.js"></script>
     <script src="security-tracker.js"></script>

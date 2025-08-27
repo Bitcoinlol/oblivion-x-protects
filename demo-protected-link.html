@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Protected Link - Oblivion X Protects</title>
+    <style>
+        /* Cyberpunk Purple & Black Theme */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .demo-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .demo-subtitle {
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        .demo-section {
+            background: rgba(168, 85, 247, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #a855f7;
+            margin-bottom: 1rem;
+        }
+
+        .demo-code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            color: #e2e8f0;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #a855f7;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: #7c3aed;
+        }
+
+        .test-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .test-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 100px;
+        }
+
+        .success {
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .error {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .info {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #ec4899;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="demo-header">
+            <h1 class="demo-title">Protected Link Demo</h1>
+            <p class="demo-subtitle">See how Oblivion X Protects secures your Lua scripts</p>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="section-title">Protected Loadstring Example</h2>
+            <p>This is how your protected script link would look:</p>
+            
+            <div class="demo-code">
+                <button class="copy-btn" data-loadstring="loadstring(game:HttpGet('https://api.oblivionxprotects.com/files/v3/loaders/demo123.lua'))()" onclick="copyToClipboard(this.dataset.loadstring)">
+                    Copy
+                </button>
+                <code>loadstring(game:HttpGet("https://api.oblivionxprotects.com/files/v3/loaders/demo123.lua"))()</code>
+            </div>
+
+            <p>When someone visits this link, they see an "ACCESS DENIED" message, but the code is still executable for authorized users.</p>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="section-title">User Management Test</h2>
+            <p>Test the whitelist/blacklist system:</p>
+
+            <div class="test-section">
+                <div>
+                    <h3>Whitelist Test</h3>
+                    <input type="text" id="whitelistTest" class="test-input" placeholder="Enter Roblox User ID" value="123456789">
+                    <button class="test-btn" onclick="testWhitelist()">Test Access</button>
+                    <div id="whitelistResult" class="result-box"></div>
+                </div>
+
+                <div>
+                    <h3>Blacklist Test</h3>
+                    <input type="text" id="blacklistTest" class="test-input" placeholder="Enter Roblox User ID" value="987654321">
+                    <button class="test-btn" onclick="testBlacklist()">Test Access</button>
+                    <div id="blacklistResult" class="result-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="section-title">Script Execution Test</h2>
+            <p>Test how the protected script would execute:</p>
+
+            <div class="test-section">
+                <div>
+                    <h3>Free for All Script</h3>
+                    <button class="test-btn" onclick="testFreeForAll()">Execute Script</button>
+                    <div id="freeForAllResult" class="result-box"></div>
+                </div>
+
+                <div>
+                    <h3>User Management Script</h3>
+                    <input type="text" id="userManagementTest" class="test-input" placeholder="Enter Roblox User ID" value="123456789">
+                    <button class="test-btn" onclick="testUserManagement()">Execute Script</button>
+                    <div id="userManagementResult" class="result-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="section-title">How It Works</h2>
+            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><strong>Upload:</strong> You upload your Lua code as a .txt file</li>
+                <li><strong>Protection:</strong> We store it securely behind access controls</li>
+                <li><strong>Distribution:</strong> You get a protected loadstring link</li>
+                <li><strong>Execution:</strong> Authorized users can execute, unauthorized see "ACCESS DENIED"</li>
+                <li><strong>Control:</strong> You manage who can access your scripts</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy. Please copy manually: ' + text);
+            });
+        }
+
+        // Test whitelist access
+        function testWhitelist() {
+            const userId = document.getElementById('whitelistTest').value;
+            const resultBox = document.getElementById('whitelistResult');
+            
+            if (userId === '123456789') {
+                resultBox.className = 'result-box success';
+                resultBox.innerHTML = '✅ User is whitelisted<br>Access granted to script';
+            } else {
+                resultBox.className = 'result-box error';
+                resultBox.innerHTML = '❌ User is not whitelisted<br>Access denied';
+            }
+        }
+
+        // Test blacklist access
+        function testBlacklist() {
+            const userId = document.getElementById('blacklistTest').value;
+            const resultBox = document.getElementById('blacklistResult');
+            
+            if (userId === '987654321') {
+                resultBox.className = 'result-box error';
+                resultBox.innerHTML = '❌ User is blacklisted<br>Kicked from game';
+            } else {
+                resultBox.className = 'result-box info';
+                resultBox.innerHTML = 'ℹ️ User is not blacklisted<br>Check whitelist status';
+            }
+        }
+
+        // Test free for all script
+        function testFreeForAll() {
+            const resultBox = document.getElementById('freeForAllResult');
+            resultBox.className = 'result-box success';
+            resultBox.innerHTML = '✅ Script executed successfully<br>Free for all access granted';
+        }
+
+        // Test user management script
+        function testUserManagement() {
+            const userId = document.getElementById('userManagementTest').value;
+            const resultBox = document.getElementById('userManagementResult');
+            
+            if (userId === '123456789') {
+                resultBox.className = 'result-box success';
+                resultBox.innerHTML = '✅ Script executed successfully<br>User is whitelisted';
+            } else if (userId === '987654321') {
+                resultBox.className = 'result-box error';
+                resultBox.innerHTML = '❌ User kicked from game<br>User is blacklisted';
+            } else {
+                resultBox.className = 'result-box error';
+                resultBox.innerHTML = '❌ User kicked from game<br>User is not whitelisted';
+            }
+        }
+
+        // Disable right-click and inspect element
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

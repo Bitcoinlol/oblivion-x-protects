@@ -1,178 +1,170 @@
-# LuaGuard 🛡️
+# Oblivion X Protects - Lua Code Protection Website
 
-> Advanced Lua Script Protection & Monetization Platform
+A comprehensive web platform for protecting and obfuscating Lua code with advanced user management and Discord bot integration.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Discord](https://img.shields.io/badge/Discord-Join-7289DA.svg)](https://discord.gg/tKF8gCw5qp)
+## 🌟 Features
 
-LuaGuard is a comprehensive platform for protecting and monetizing Lua scripts, featuring enterprise-grade obfuscation, license key management, and user analytics.
+### 🔐 **User Authentication**
+- Secure login system with API key authentication
+- Free trial API keys (30 days)
+- Owner access with special privileges
+- IP address tracking and management
 
-## ✨ Features
+### 🛡️ **Lua Code Protection**
+- Advanced obfuscation engine (nearly impossible to deobfuscate)
+- Protected raw links where code is hidden but still executable
+- Cross-platform download support
+- Multiple protection levels
 
-- 🔒 **Advanced Script Obfuscation** - Military-grade protection using Luraph™ technology
-- 🔑 **License Key Management** - Generate, validate, and manage keys with expiration
-- 🆓 **30-Day Free Trial** - Full access to get started
-- 🖥️ **HWID Protection** - Hardware ID-based script binding
-- 📊 **Real-time Analytics** - Monitor usage, revenue, and user activity
-- 🎨 **Modern Dashboard** - Comprehensive management interface
-- 💬 **Discord Integration** - Community support and updates
-- 🌐 **RESTful API** - Easy integration with external tools
+### 📁 **Project Management**
+- Create and manage multiple projects
+- Free for all or user management modes
+- Whitelist/blacklist Roblox user IDs
+- Track loadstring executions
 
-## 🚀 Quick Start
+### 🤖 **Discord Bot Integration**
+- Bot token and client ID management
+- Admin user management
+- Commands: `/whitelist`, `/blacklist`, `/generate key`, `/panel`
+- Role-based access control
 
-### Prerequisites
-- Node.js 18+ installed
-- Git installed
+### 📊 **Dashboard & Analytics**
+- Real-time statistics and monitoring
+- Performance tracking charts
+- User activity monitoring
+- API key expiry management
 
-### Installation
+### 💰 **Subscription Plans**
+- Free Trial (30 days)
+- 1 Month Plan
+- 5 Months Plan
+- 1 Year Plan
+- 2 Years Plan
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/luaguard.git
-   cd luaguard
-   ```
+## 🚀 Getting Started
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### 1. **Access the Website**
+- Open `index.html` in your web browser
+- Navigate through the sections to learn about features
+- Click "Login" to access the dashboard
 
-3. **Start the server:**
-   ```bash
-   npm run luaguard
-   ```
-   Or double-click `luaguard-start.bat` on Windows
+### 2. **Create an Account**
+- Click "Get Free API Key (30 Days)" for a trial
+- Enter your Roblox username and Discord username
+- Use the generated API key to login
 
-4. **Access the website:**
-   - Main Site: http://localhost:3000
-   - Dashboard: http://localhost:3000/dashboard.html
-   - Pricing: http://localhost:3000/pricing.html
+### 3. **Dashboard Features**
+- **Dashboard Tab**: View statistics and API key expiry
+- **Projects Tab**: Create and manage your Lua scripts
+- **Obfuscation Tab**: Upload and obfuscate your code
+- **Discord Bot Tab**: Manage bot access and admins
+- **IP Addresses Tab**: Track and manage user access
+- **Status Tab**: Monitor script performance
 
-## 💎 Pricing Plans
+### 4. **Creating Projects**
+- Click "Create Project" in the Projects tab
+- Enter project name and upload .txt file with Lua code
+- Choose between "Free for All" or "User Management"
+- Get a protected loadstring link for distribution
 
-| Plan | Price | Scripts | Keys | Features |
-|------|-------|---------|------|----------|
-| **Free Trial** | $0 (30 days) | 5 | 50 | Basic protection, HWID binding |
-| **Pro** | $19/month | 25 | 500 | Advanced obfuscation, priority support |
-| **Premium** | $49/month | 100 | 5,000 | Premium protection, analytics, API access |
-| **Enterprise** | Custom | Unlimited | Unlimited | Custom solutions, dedicated support |
+### 5. **User Management**
+- Add Roblox user IDs to whitelist/blacklist
+- Control who can execute your protected scripts
+- Monitor execution statistics
 
-## 🛠️ API Usage
+## 🔧 Technical Details
 
-### Register User (30-day trial)
-```javascript
-POST /api/register
-{
-  "email": "user@example.com",
-  "password": "securepassword",
-  "username": "username"
-}
-```
+### **Protected Scripts**
+- Scripts are stored securely behind access controls
+- Users see "ACCESS DENIED" message when unauthorized
+- Code is hidden but still executable for authorized users
+- Inspect element and developer tools are blocked
 
-### Upload & Obfuscate Script
-```javascript
-POST /api/scripts/upload
-Headers: { "Authorization": "Bearer <token>" }
-FormData: {
-  "name": "script_name",
-  "script": <lua_file>,
-  "protection_level": "advanced"
-}
-```
+### **Obfuscation Engine**
+- Multi-layer protection system
+- Surpasses MoonSec and LuaRPH
+- Nearly impossible to reverse engineer
+- Maintains code functionality
 
-### Generate License Key
-```javascript
-POST /api/keys/generate
-{
-  "script_id": "uuid",
-  "duration_days": 30,
-  "max_uses": 1
-}
-```
+### **API Key System**
+- Unique keys for each user
+- Automatic expiry based on plan
+- Owner key with unlimited access
+- Secure authentication system
 
-### Validate Key (for protected scripts)
-```javascript
-POST /api/validate
-{
-  "key": "LG-XXXX-XXXX-XXXX",
-  "hwid": "hardware_id",
-  "script_checksum": "checksum"
-}
-```
+## 📱 **Discord Bot Commands**
 
-## 🎨 Design
+### **User Commands**
+- `/whitelist [user]` - Whitelist a Discord user
+- `/blacklist [user]` - Blacklist a Discord user
+- `/generate key` - Generate a redemption key
+- `/panel` - Create management panel
 
-LuaGuard features a modern purple and black theme with:
-- Responsive design for all devices
+### **Bot Information**
+- **Client ID**: 1407376197771595816
+- **Public Key**: 58e2272f9bc57aa23c9217410b10229bbb68c43627d6484e083907ad0a27989e
+
+## 🎨 **Theme & Design**
+
+- **Cyberpunk Purple & Black Theme**
+- Modern, responsive design
 - Smooth animations and transitions
-- Professional gradient effects
-- Clean, intuitive interface
+- Professional shield logo
+- Mobile-friendly interface
 
-## 🔧 Technology Stack
+## 🔒 **Security Features**
 
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Node.js, Express.js
-- **Authentication**: JWT tokens, bcrypt
-- **File Upload**: Multer middleware
-- **Database**: In-memory (upgrade to MongoDB for production)
+- Right-click disabled
+- F12 and developer tools blocked
+- Text selection disabled
+- Drag and drop prevented
+- Console warnings for unauthorized access
 
-## 📦 Project Structure
+## 📁 **File Structure**
 
 ```
-luaguard/
-├── index.html              # Landing page
-├── dashboard.html          # User dashboard
-├── pricing.html           # Pricing plans
-├── styles.css             # Main styles
-├── dashboard.css          # Dashboard styles
-├── pricing.css            # Pricing styles
-├── script.js              # Frontend logic
-├── dashboard.js           # Dashboard functionality
-├── pricing.js             # Pricing logic
-├── luaguard-server.js     # Backend server
-├── package.json           # Dependencies
+├── index.html              # Main landing page
+├── login.html              # Login and signup page
+├── dashboard.html          # Main dashboard interface
+├── protected-script.html   # Protected script example
+├── oblivion-styles.css     # Main stylesheet
+├── dashboard.css           # Dashboard-specific styles
+├── dashboard.js            # Dashboard functionality
+├── login.js               # Authentication logic
+├── loadstring-protection.js # Script protection system
+├── discord-bot.js         # Discord bot integration
 └── README.md              # This file
 ```
 
-## 🚀 Production Deployment
+## 🌐 **Deployment**
 
-For production use:
+The website is designed to work as a static site and can be deployed to:
+- Netlify
+- GitHub Pages
+- Vercel
+- Any static hosting service
 
-1. **Database**: Replace in-memory storage with MongoDB/PostgreSQL
-2. **Environment**: Set up environment variables for secrets
-3. **Storage**: Use cloud storage (AWS S3) for script files
-4. **Security**: Add rate limiting and security headers
-5. **SSL**: Configure HTTPS with SSL certificates
-6. **Monitoring**: Add logging and error tracking
+## 📞 **Support**
 
-## 🤝 Contributing
+- **Discord**: [Join our server](https://discord.gg/qFhQYT4G)
+- **Website**: Access through the main dashboard
+- **Documentation**: Check the dashboard help sections
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## ⚠️ **Important Notes**
 
-## 💬 Support
+- This is a demonstration website
+- Real implementation would require backend services
+- API keys and user data are stored locally for demo purposes
+- Protected scripts are simulated for demonstration
 
-- **Discord**: [Join our community](https://discord.gg/tKF8gCw5qp)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/luaguard/issues)
-- **Email**: support@luaguard.com
+## 🔄 **Updates & Maintenance**
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ⚡ Performance
-
-- 99.9% uptime guarantee
-- Global CDN distribution
-- Sub-100ms key validation
-- Instant script obfuscation
+The website includes:
+- Real-time statistics updates
+- Live countdown timers
+- Dynamic content loading
+- Responsive design for all devices
 
 ---
 
-**Made with ❤️ for the Lua community**
-
-[🌟 Star this repo](https://github.com/yourusername/luaguard) | [🐛 Report Bug](https://github.com/yourusername/luaguard/issues) | [💡 Request Feature](https://github.com/yourusername/luaguard/issues)
+**Oblivion X Protects** - Your Lua code deserves the best protection! 🛡️

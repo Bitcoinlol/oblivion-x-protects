@@ -14,6 +14,7 @@ class OblivionDashboard {
         this.userList = [];
         this.ipAddresses = [];
         this.generatedKeys = [];
+        this.selectedProjectType = 'freeforall';
         
         this.init();
     }
@@ -25,6 +26,7 @@ class OblivionDashboard {
         this.loadDashboardData();
         this.setupOwnerFeatures();
         this.disableInspectElement();
+        this.setupProjectTypeSelection();
     }
 
     setupEventListeners() {
@@ -53,6 +55,20 @@ class OblivionDashboard {
 
         // Discord bot controls
         this.setupDiscordControls();
+
+        // IP address controls
+        this.setupIPControls();
+    }
+
+    setupProjectTypeSelection() {
+        const typeButtons = document.querySelectorAll('.type-btn');
+        typeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.selectedProjectType = btn.dataset.type;
+            });
+        });
     }
 
     switchTab(tabName) {
@@ -76,26 +92,45 @@ class OblivionDashboard {
             case 'projects':
                 this.loadProjects();
                 break;
+            case 'obfuscation':
+                this.setupObfuscation();
+                break;
+            case 'discord-bot':
+                this.loadDiscordData();
+                break;
             case 'ip-addresses':
                 this.loadIPAddresses();
                 break;
             case 'status':
                 this.loadStatusCharts();
                 break;
+            case 'generate-keys':
+                this.loadGeneratedKeys();
+                break;
         }
     }
 
+    setupObfuscation() {
+        // Setup obfuscation tab functionality
+        console.log('Obfuscation tab loaded');
+    }
+
+    loadDiscordData() {
+        // Load Discord bot data
+        console.log('Discord bot tab loaded');
+    }
+
     updateUserInfo() {
-        const usernameEl = document.querySelector('.username');
-        const apiExpiryEl = document.querySelector('.api-expiry');
-        const userAvatarEl = document.querySelector('.user-avatar img');
+        const usernameEl = document.getElementById('displayUsername');
+        const apiExpiryEl = document.getElementById('apiExpiry');
+        const userAvatarEl = document.getElementById('avatarImg');
 
         if (usernameEl) usernameEl.textContent = this.currentUser.username;
         if (userAvatarEl) userAvatarEl.src = this.currentUser.avatar || `https://ui-avatars.com/api/?name=${this.currentUser.username}&background=a855f7&color=fff`;
         
         if (apiExpiryEl && this.currentUser.apiExpiry) {
             const timeLeft = this.calculateTimeLeft(this.currentUser.apiExpiry);
-            apiExpiryEl.textContent = `API Key expires in ${timeLeft}`;
+            apiExpiryEl.textContent = `API Key expires in: ${timeLeft}`;
         }
     }
 
@@ -126,8 +161,8 @@ class OblivionDashboard {
     }
 
     updateCurrentTime() {
-        const timeEl = document.querySelector('.current-time');
-        const dateEl = document.querySelector('.current-date');
+        const timeEl = document.getElementById('currentTime');
+        const dateEl = document.getElementById('currentDate');
         
         if (timeEl && dateEl) {
             const now = new Date();
@@ -146,8 +181,8 @@ class OblivionDashboard {
 
     updateDashboardStats() {
         const statNumbers = document.querySelectorAll('.stat-number');
-        const expiryDateEl = document.querySelector('.expiry-date');
-        const countdownEl = document.querySelector('.expiry-countdown');
+        const expiryDateEl = document.getElementById('expiryDate');
+        const countdownEl = document.getElementById('expiryCountdown');
 
         if (statNumbers.length >= 4) {
             statNumbers[0].textContent = this.stats.whitelistedUsers;
@@ -203,518 +238,504 @@ class OblivionDashboard {
         }
     }
 
-    handleProjectCreation(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const projectData = {
-            name: formData.get('projectName'),
-            description: formData.get('projectDescription'),
-            created: new Date(),
-            id: Date.now()
-        };
-
-        this.projects.push(projectData);
-        this.showNotification('Project created successfully!', 'success');
-        this.closeModal('createProjectModal');
-        e.target.reset();
-        this.loadProjects();
-    }
-
-    loadProjects() {
-        const projectsGrid = document.querySelector('.projects-stats');
-        if (!projectsGrid) return;
-
-        // Update project stats
-        const projectCount = document.querySelector('.projects-stats .stat-number');
-        if (projectCount) projectCount.textContent = this.projects.length;
-    }
-
     setupFileUpload() {
-        const uploadArea = document.querySelector('.upload-area');
-        const fileInput = document.getElementById('luaFile');
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('fileUploadArea');
 
-        if (uploadArea && fileInput) {
+        if (fileInput && uploadArea) {
             uploadArea.addEventListener('click', () => fileInput.click());
-            
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                uploadArea.style.borderColor = 'var(--primary-purple)';
+                uploadArea.classList.add('dragover');
             });
-
             uploadArea.addEventListener('dragleave', () => {
-                uploadArea.style.borderColor = 'var(--border-color)';
+                uploadArea.classList.remove('dragover');
             });
-
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                uploadArea.style.borderColor = 'var(--border-color)';
-                
+                uploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
-                if (files.length > 0 && files[0].name.endsWith('.lua')) {
-                    fileInput.files = files;
+                if (files.length > 0) {
                     this.handleFileUpload(files[0]);
-                } else {
-                    this.showNotification('Please upload a .lua file', 'error');
                 }
             });
-
             fileInput.addEventListener('change', (e) => {
                 if (e.target.files.length > 0) {
                     this.handleFileUpload(e.target.files[0]);
                 }
             });
         }
-
-        // Obfuscate button
-        document.querySelector('.btn-primary')?.addEventListener('click', () => this.processObfuscation());
     }
 
     handleFileUpload(file) {
-        const uploadText = document.querySelector('.upload-area p');
-        if (uploadText) {
-            uploadText.innerHTML = `<i class="fas fa-file-code"></i> ${file.name} selected`;
+        if (file.type !== 'text/plain' && !file.name.endsWith('.txt')) {
+            this.showNotification('Please upload a .txt file', 'error');
+            return;
         }
 
-        // Update progress steps
-        this.updateProgressStep(1);
+        this.startObfuscation(file);
     }
 
-    updateProgressStep(step) {
-        document.querySelectorAll('.step').forEach((el, index) => {
-            if (index < step) {
-                el.classList.add('active');
-            } else {
-                el.classList.remove('active');
+    startObfuscation(file) {
+        const uploadArea = document.getElementById('fileUploadArea');
+        const progressArea = document.getElementById('obfuscationProgress');
+
+        uploadArea.style.display = 'none';
+        progressArea.style.display = 'block';
+
+        // Simulate obfuscation process
+        setTimeout(() => this.activateStep(2), 1000);
+        setTimeout(() => this.activateStep(3), 3000);
+        setTimeout(() => this.activateStep(4), 5000);
+        setTimeout(() => this.completeObfuscation(file), 6000);
+    }
+
+    activateStep(stepNumber) {
+        document.querySelectorAll('.progress-step').forEach((step, index) => {
+            if (index < stepNumber) {
+                step.classList.add('active');
             }
         });
     }
 
-    async processObfuscation() {
-        const fileInput = document.getElementById('luaFile');
-        if (!fileInput.files.length) {
-            this.showNotification('Please select a Lua file first', 'error');
-            return;
-        }
+    completeObfuscation(file) {
+        const progressArea = document.getElementById('obfuscationProgress');
+        const uploadArea = document.getElementById('fileUploadArea');
 
-        this.updateProgressStep(2);
-        this.showNotification('Processing obfuscation...', 'info');
+        progressArea.style.display = 'none';
+        uploadArea.style.display = 'block';
 
-        // Simulate obfuscation process
-        setTimeout(() => {
-            this.updateProgressStep(3);
-            this.stats.scriptsObfuscated++;
-            this.showNotification('Script obfuscated successfully!', 'success');
-            
-            // Generate loadstring
-            const loadstring = this.generateLoadstring();
-            this.displayLoadstring(loadstring);
-        }, 2000);
-    }
+        // Create download link
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(new Blob(['-- Obfuscated Lua Code\n-- Generated by Oblivion X Protects\n\nlocal _0x1a2b3c = "obfuscated_code_here"\nprint("Code protected successfully!")'], { type: 'text/plain' }));
+        downloadLink.download = `obfuscated_${file.name}`;
+        downloadLink.click();
 
-    generateLoadstring() {
-        const randomId = Math.random().toString(36).substr(2, 9);
-        return `loadstring(game:HttpGet("https://oblivionx.protects/api/script/${randomId}"))()`;
-    }
-
-    displayLoadstring(loadstring) {
-        // Create and show loadstring result
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'obfuscation-result';
-        resultDiv.innerHTML = `
-            <h4>Protected Loadstring Generated:</h4>
-            <div class="loadstring-output">
-                <code>${loadstring}</code>
-                <button class="copy-btn" onclick="navigator.clipboard.writeText('${loadstring}')">
-                    <i class="fas fa-copy"></i> Copy
-                </button>
-            </div>
-        `;
-        
-        document.querySelector('.obfuscation-container').appendChild(resultDiv);
+        this.showNotification('Obfuscation complete! File downloaded.', 'success');
+        this.stats.scriptsObfuscated++;
+        this.updateDashboardStats();
     }
 
     setupUserManagement() {
-        document.querySelector('.manage-users-btn')?.addEventListener('click', () => this.openModal('userManagementModal'));
-    }
+        // User management tab switching
+        const tabButtons = document.querySelectorAll('.user-management-tabs .tab-btn');
+        const tabContents = document.querySelectorAll('.user-management-tabs + .tab-content');
 
-    handleUserManagement(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const action = formData.get('action');
-        const userId = formData.get('userId');
-
-        if (action === 'whitelist') {
-            this.stats.whitelistedUsers++;
-            this.showNotification(`User ${userId} whitelisted successfully!`, 'success');
-        } else if (action === 'blacklist') {
-            this.stats.blacklistedUsers++;
-            this.showNotification(`User ${userId} blacklisted successfully!`, 'success');
-        }
-
-        this.updateDashboardStats();
-        this.closeModal('userManagementModal');
-        e.target.reset();
-    }
-
-    setupKeyGeneration() {
-        if (!this.isOwner) return;
-
-        document.querySelectorAll('.plan-option').forEach(option => {
-            option.addEventListener('click', () => {
-                document.querySelectorAll('.plan-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+                
+                tabButtons.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(targetTab + 'Tab').classList.add('active');
             });
         });
-
-        document.querySelector('.generate-key-btn')?.addEventListener('click', () => this.generateAPIKey());
     }
 
-    generateAPIKey() {
-        const selectedPlan = document.querySelector('.plan-option.selected');
-        if (!selectedPlan) {
-            this.showNotification('Please select a plan first', 'error');
+    addWhitelistUser() {
+        const userId = document.getElementById('whitelistUserId').value;
+        if (!userId) {
+            this.showNotification('Please enter a Roblox User ID', 'error');
             return;
         }
 
-        const duration = selectedPlan.querySelector('.plan-duration').textContent;
-        const key = this.createAPIKey(duration);
+        const userItem = this.createUserItem(userId, 'whitelisted');
+        document.getElementById('whitelistUsers').appendChild(userItem);
+        document.getElementById('whitelistUserId').value = '';
         
-        this.generatedKeys.push({
-            key: key,
-            duration: duration,
-            created: new Date(),
-            status: 'active'
-        });
-
-        this.displayGeneratedKey(key, duration);
-        this.showNotification('API Key generated successfully!', 'success');
+        this.stats.whitelistedUsers++;
+        this.updateDashboardStats();
+        this.showNotification(`User ${userId} whitelisted successfully`, 'success');
     }
 
-    createAPIKey(duration) {
-        const prefix = 'OX';
-        const segments = [];
-        for (let i = 0; i < 4; i++) {
-            segments.push(Math.random().toString(36).substr(2, 4).toUpperCase());
+    addBlacklistUser() {
+        const userId = document.getElementById('blacklistUserId').value;
+        if (!userId) {
+            this.showNotification('Please enter a Roblox User ID', 'error');
+            return;
         }
-        return `${prefix}-${segments.join('-')}`;
+
+        const userItem = this.createUserItem(userId, 'blacklisted');
+        document.getElementById('blacklistUsers').appendChild(userItem);
+        document.getElementById('blacklistUserId').value = '';
+        
+        this.stats.blacklistedUsers++;
+        this.updateDashboardStats();
+        this.showNotification(`User ${userId} blacklisted successfully`, 'success');
     }
 
-    displayGeneratedKey(key, duration) {
-        const keysContainer = document.querySelector('.generated-keys');
-        if (!keysContainer) return;
-
-        const keyItem = document.createElement('div');
-        keyItem.className = 'key-item';
-        keyItem.innerHTML = `
-            <div>
-                <div class="key-value">${key}</div>
-                <small>Duration: ${duration}</small>
-            </div>
-            <button class="copy-key-btn" onclick="navigator.clipboard.writeText('${key}')">
-                <i class="fas fa-copy"></i> Copy
+    createUserItem(userId, status) {
+        const item = document.createElement('div');
+        item.className = 'user-item';
+        item.innerHTML = `
+            <span>User ID: ${userId}</span>
+            <span class="status ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+            <button class="delete-btn" onclick="this.parentElement.remove()">
+                <i class="fas fa-trash"></i>
             </button>
         `;
+        return item;
+    }
+
+    setupKeyGeneration() {
+        // Owner key generation
+        if (this.isOwner) {
+            document.getElementById('ownerTab').style.display = 'block';
+        }
+    }
+
+    generatePlanKey(planType) {
+        const key = this.generateApiKey(planType);
+        const keyItem = this.createKeyItem(key, planType);
+        document.getElementById('generatedKeysList').appendChild(keyItem);
         
-        keysContainer.appendChild(keyItem);
+        this.generatedKeys.push({ key, planType, generated: new Date() });
+        this.showNotification(`${planType} key generated successfully`, 'success');
+    }
+
+    generateApiKey(planType) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 32; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return `OX_${planType.toUpperCase()}_${result}`;
+    }
+
+    createKeyItem(key, planType) {
+        const item = document.createElement('div');
+        item.className = 'key-item';
+        item.innerHTML = `
+            <div class="key-info">
+                <span class="key-value">${key}</span>
+                <span class="key-plan">${planType}</span>
+            </div>
+            <div class="key-actions">
+                <button class="copy-btn" onclick="copyToClipboard('${key}')">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="delete-btn" onclick="this.closest('.key-item').remove()">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        return item;
     }
 
     setupDiscordControls() {
-        // Placeholder for Discord bot integration
-        document.querySelectorAll('.control-card button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.showNotification('Discord bot feature coming soon!', 'info');
+        // Discord admin management
+        document.querySelector('.add-admin-btn')?.addEventListener('click', () => this.addDiscordAdmin());
+    }
+
+    addDiscordAdmin() {
+        const adminId = document.getElementById('adminDiscordId').value;
+        if (!adminId) {
+            this.showNotification('Please enter a Discord User ID', 'error');
+            return;
+        }
+
+        const adminItem = document.createElement('div');
+        adminItem.className = 'admin-item';
+        adminItem.innerHTML = `
+            <span>Discord ID: ${adminId}</span>
+            <button class="delete-btn" onclick="this.parentElement.remove()">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        
+        document.getElementById('adminList').appendChild(adminItem);
+        document.getElementById('adminDiscordId').value = '';
+        this.showNotification(`Discord admin ${adminId} added successfully`, 'success');
+    }
+
+    setupIPControls() {
+        const toggle = document.getElementById('allowMultipleLogins');
+        if (toggle) {
+            toggle.addEventListener('change', (e) => {
+                this.updateIPPolicy(e.target.checked);
             });
-        });
+        }
+    }
+
+    updateIPPolicy(allowMultiple) {
+        if (allowMultiple) {
+            this.showNotification('Multiple logins now allowed', 'info');
+        } else {
+            this.showNotification('Multiple logins disabled', 'info');
+        }
+    }
+
+    loadProjects() {
+        // Load existing projects
+        this.updateProjectStats();
+    }
+
+    updateProjectStats() {
+        document.getElementById('projectWhitelisted').textContent = this.stats.whitelistedUsers;
+        document.getElementById('projectBlacklisted').textContent = this.stats.blacklistedUsers;
+        document.getElementById('projectExecutions').textContent = this.stats.loadstringExecutions;
+    }
+
+    handleProjectCreation(e) {
+        e.preventDefault();
+        
+        const projectName = document.getElementById('projectName').value;
+        const projectFile = document.getElementById('projectFile').files[0];
+        
+        if (!projectName || !projectFile) {
+            this.showNotification('Please fill in all fields', 'error');
+            return;
+        }
+
+        // Create project
+        const project = {
+            id: Date.now(),
+            name: projectName,
+            type: this.selectedProjectType,
+            active: true,
+            createdAt: new Date()
+        };
+
+        this.projects.push(project);
+        this.addProjectToGrid(project);
+        this.closeModal('createProjectModal');
+        
+        // Reset form
+        document.getElementById('createProjectForm').reset();
+        this.showNotification(`Project "${projectName}" created successfully`, 'success');
+    }
+
+    addProjectToGrid(project) {
+        const projectsGrid = document.getElementById('projectsGrid');
+        const projectCard = document.createElement('div');
+        projectCard.className = 'project-card';
+        projectCard.innerHTML = `
+            <div class="project-header">
+                <h3>${project.name}</h3>
+                <span class="project-status ${project.active ? 'active' : 'inactive'}">
+                    ${project.active ? 'Active' : 'Inactive'}
+                </span>
+            </div>
+            <div class="project-type">${project.type === 'freeforall' ? 'Free for All' : 'User Management'}</div>
+            <div class="project-actions">
+                <button class="action-btn copy-btn" onclick="copyProjectLink(${project.id})" title="Copy Loadstring">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="action-btn activate-btn" onclick="toggleProjectStatus(${project.id})" title="Toggle Status">
+                    <i class="fas fa-power-off"></i>
+                </button>
+                <button class="action-btn delete-btn" onclick="deleteProject(${project.id})" title="Delete Project">
+                    <i class="fas fa-trash"></i>
+                </button>
+                ${project.type === 'usermanagement' ? `
+                    <button class="action-btn manage-btn" onclick="openUserManagement(${project.id})" title="Manage Users">
+                        <i class="fas fa-users"></i>
+                    </button>
+                ` : ''}
+            </div>
+        `;
+        
+        projectsGrid.appendChild(projectCard);
     }
 
     loadIPAddresses() {
-        // Simulate IP address data
-        this.ipAddresses = [
-            { ip: '192.168.1.100', location: 'New York, US', lastLogin: '2 minutes ago', status: 'current' },
-            { ip: '10.0.0.45', location: 'London, UK', lastLogin: '1 hour ago', status: 'recent' },
-            { ip: '172.16.0.23', location: 'Tokyo, JP', lastLogin: '1 day ago', status: 'recent' }
-        ];
-
+        // Load IP addresses
         this.updateIPList();
     }
 
     updateIPList() {
-        const ipList = document.querySelector('.ip-list');
-        if (!ipList) return;
+        const ipList = document.getElementById('ipList');
+        if (ipList) {
+            ipList.innerHTML = `
+                <div class="ip-item">
+                    <span class="ip-address">${this.getCurrentIP()}</span>
+                    <span class="ip-status current">Current Session</span>
+                </div>
+            `;
+        }
+    }
 
-        ipList.innerHTML = this.ipAddresses.map(ip => `
-            <div class="ip-item">
-                <span class="ip-address">${ip.ip}</span>
-                <span class="location">${ip.location}</span>
-                <span class="last-login">${ip.lastLogin}</span>
-                <span class="status-badge status-${ip.status}">${ip.status}</span>
-            </div>
-        `).join('');
+    getCurrentIP() {
+        // In a real app, this would get the actual IP
+        return '192.168.1.1';
     }
 
     loadStatusCharts() {
-        // Placeholder for charts - in a real app, you'd integrate Chart.js or similar
-        document.querySelectorAll('.chart-placeholder').forEach(placeholder => {
-            placeholder.textContent = 'Chart data loading...';
-        });
+        // Initialize status chart
+        this.initStatusChart();
     }
 
-    loadUserData() {
-        // Load from localStorage or API
-        const userData = localStorage.getItem('oblivion_user');
-        if (userData) {
-            return JSON.parse(userData);
+    initStatusChart() {
+        const canvas = document.getElementById('statusChart');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            // Simple chart drawing
+            ctx.fillStyle = '#a855f7';
+            ctx.fillRect(50, 300, 100, 100);
+            ctx.fillRect(200, 250, 100, 150);
+            ctx.fillRect(350, 200, 100, 200);
+            ctx.fillRect(500, 150, 100, 250);
         }
-
-        // Default user data
-        return {
-            username: 'User123',
-            apiKey: localStorage.getItem('freeTrialKey') || 'OX-DEMO-KEY',
-            apiExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            avatar: null
-        };
     }
 
-    checkOwnerStatus() {
-        const apiKey = this.currentUser.apiKey;
-        return apiKey && (apiKey.startsWith('OWNER-') || apiKey === 'OWNER-MASTER-KEY-2024');
+    loadGeneratedKeys() {
+        // Load existing generated keys
+        this.updateGeneratedKeysList();
+    }
+
+    updateGeneratedKeysList() {
+        const keysList = document.getElementById('generatedKeysList');
+        if (keysList) {
+            keysList.innerHTML = '';
+            this.generatedKeys.forEach(keyData => {
+                const keyItem = this.createKeyItem(keyData.key, keyData.planType);
+                keysList.appendChild(keyItem);
+            });
+        }
+    }
+
+    loadDashboardData() {
+        // Load initial dashboard data
+        this.updateDashboardStats();
     }
 
     setupOwnerFeatures() {
-        const ownerTab = document.querySelector('[data-tab="generate-keys"]');
-        if (ownerTab) {
-            ownerTab.style.display = this.isOwner ? 'flex' : 'none';
+        if (this.isOwner) {
+            // Show owner-specific features
+            document.getElementById('ownerTab').style.display = 'block';
         }
     }
 
-    logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            localStorage.removeItem('oblivion_user');
-            localStorage.removeItem('freeTrialKey');
-            window.location.href = 'login.html';
-        }
+    checkOwnerStatus() {
+        return this.currentUser.apiKey === 'Ownerkeyyes+Iamlightitself.luarmorwebsiteremkaerkys';
     }
 
-    showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}"></i>
-            <span>${message}</span>
-        `;
-
-        // Add notification styles if not present
-        if (!document.querySelector('#notification-styles')) {
-            const styles = document.createElement('style');
-            styles.id = 'notification-styles';
-            styles.textContent = `
-                .notification {
-                    position: fixed;
-                    top: 100px;
-                    right: 20px;
-                    background: var(--card-bg);
-                    border: 1px solid var(--border-color);
-                    border-radius: 8px;
-                    padding: 1rem 1.5rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    z-index: 10000;
-                    transform: translateX(100%);
-                    transition: transform 0.3s ease;
-                    min-width: 300px;
-                }
-                .notification.show { transform: translateX(0); }
-                .notification-success { border-color: #22c55e; color: #22c55e; }
-                .notification-error { border-color: #ef4444; color: #ef4444; }
-                .notification-info { border-color: var(--primary-purple); color: var(--primary-purple); }
-            `;
-            document.head.appendChild(styles);
+    loadUserData() {
+        // Load user data from localStorage or session
+        const userData = localStorage.getItem('oblivionUser');
+        if (userData) {
+            return JSON.parse(userData);
         }
-
-        document.body.appendChild(notification);
-
-        setTimeout(() => notification.classList.add('show'), 100);
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        
+        // Default user data
+        return {
+            username: 'Demo User',
+            apiKey: 'demo_key',
+            apiExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            avatar: null
+        };
     }
 
     disableInspectElement() {
         // Disable right-click
         document.addEventListener('contextmenu', e => e.preventDefault());
-
-        // Disable common inspect shortcuts
-        document.addEventListener('keydown', (e) => {
+        
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U
+        document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || 
                 (e.ctrlKey && e.shiftKey && e.key === 'I') ||
                 (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-                (e.ctrlKey && e.key === 'U')) {
+                (e.ctrlKey && e.key === 'u')) {
                 e.preventDefault();
-                this.showNotification('Developer tools are disabled for security', 'error');
             }
         });
     }
 
-    loadDashboardData() {
-        // Simulate loading data
+    showNotification(message, type = 'info') {
+        const container = document.getElementById('notification-container');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        container.appendChild(notification);
+        
         setTimeout(() => {
-            this.stats = {
-                whitelistedUsers: Math.floor(Math.random() * 100),
-                blacklistedUsers: Math.floor(Math.random() * 20),
-                scriptsObfuscated: Math.floor(Math.random() * 500),
-                loadstringExecutions: Math.floor(Math.random() * 10000)
-            };
-            this.updateDashboardStats();
-        }, 1000);
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                if (container.contains(notification)) {
+                    container.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('oblivionUser');
+            window.location.href = 'index.html';
+        }
     }
 }
 
-// Initialize dashboard when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.oblivionDashboard = new OblivionDashboard();
-});
+// Global functions for onclick handlers
+function showCreateProjectModal() {
+    window.oblivionDashboard?.openModal('createProjectModal');
+}
 
-// Helper functions
-function readFileAsText(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsText(file);
+function closeModal(modalId) {
+    window.oblivionDashboard?.closeModal(modalId);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        window.oblivionDashboard?.showNotification('Copied to clipboard!', 'success');
+    }).catch(() => {
+        window.oblivionDashboard?.showNotification('Failed to copy', 'error');
     });
 }
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
-    
-    // Add toast styles if not already defined
-    if (!document.querySelector('.toast-styles')) {
-        const style = document.createElement('style');
-        style.className = 'toast-styles';
-        style.textContent = `
-            .toast {
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: var(--dark-gray);
-                color: var(--white);
-                padding: 1rem 1.5rem;
-                border-radius: 8px;
-                border: 1px solid var(--primary-purple);
-                box-shadow: var(--shadow);
-                z-index: 10000;
-                opacity: 0;
-                transform: translateX(100%);
-                transition: all 0.3s ease;
-            }
-            .toast.show {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            .toast-success {
-                border-color: #22C55E;
-            }
-            .toast-error {
-                border-color: #EF4444;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 100);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (document.body.contains(toast)) {
-                document.body.removeChild(toast);
-            }
-        }, 300);
-    }, 3000);
-}
-
-async function loadDashboardData() {
-    try {
-        // Simulate loading dashboard data
-        console.log('Loading dashboard data...');
-        
-        // In a real application, you would fetch this data from your API
-        const dashboardData = {
-            user: {
-                username: 'User123',
-                email: 'user@example.com',
-                trial_expires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
-            },
-            stats: {
-                scripts: 12,
-                keys: 248,
-                users: 1432,
-                revenue: 2847
-            },
-            scripts: [
-                { id: 1, name: 'premium_executor.lua', keys: 45, users: 128, revenue: 890, status: 'active' },
-                { id: 2, name: 'advanced_script.lua', keys: 23, users: 67, revenue: 340, status: 'active' }
-            ],
-            keys: [
-                { key: 'LG-2F4A-8B9C-7E1D', script: 'premium_executor.lua', user: 'user@example.com', expires: '2025-09-22', status: 'active' },
-                { key: 'LG-9A3C-5D6E-4F2B', script: 'advanced_script.lua', user: 'demo@test.com', expires: '2025-08-25', status: 'expired' }
-            ]
-        };
-        
-        // Update UI with loaded data
-        updateDashboardUI(dashboardData);
-    } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-        showToast('Failed to load dashboard data', 'error');
+function copyProjectLink(projectId) {
+    const project = window.oblivionDashboard?.projects.find(p => p.id === projectId);
+    if (project) {
+        const loadstring = `loadstring(game:HttpGet("https://api.oblivionxprotects.com/files/v3/loaders/${projectId}.lua"))()`;
+        copyToClipboard(loadstring);
     }
 }
 
-function updateDashboardUI(data) {
-    // Update stats cards
-    const statCards = document.querySelectorAll('.stat-card .stat-info h3');
-    if (statCards.length >= 4) {
-        statCards[0].textContent = data.stats.scripts;
-        statCards[1].textContent = data.stats.keys;
-        statCards[2].textContent = data.stats.users.toLocaleString();
-        statCards[3].textContent = `$${data.stats.revenue.toLocaleString()}`;
-    }
-
-    // Update trial progress
-    const trialProgress = document.querySelector('.progress-fill');
-    if (trialProgress && data.user.trial_expires) {
-        const daysLeft = Math.ceil((data.user.trial_expires - new Date()) / (1000 * 60 * 60 * 24));
-        const daysUsed = 30 - daysLeft;
-        const percentage = (daysUsed / 30) * 100;
-        trialProgress.style.width = `${percentage}%`;
-        
-        const trialBadge = document.querySelector('.trial-badge');
-        if (trialBadge) {
-            trialBadge.textContent = `${daysLeft} Days Remaining`;
-        }
-        
-        const progressText = document.querySelector('.trial-progress p');
-        if (progressText) {
-            progressText.textContent = `${daysUsed} out of 30 days used`;
-        }
+function toggleProjectStatus(projectId) {
+    const project = window.oblivionDashboard?.projects.find(p => p.id === projectId);
+    if (project) {
+        project.active = !project.active;
+        // Update UI
+        const projectCard = document.querySelector(`[onclick="toggleProjectStatus(${projectId})"]`).closest('.project-card');
+        const statusEl = projectCard.querySelector('.project-status');
+        statusEl.textContent = project.active ? 'Active' : 'Inactive';
+        statusEl.className = `project-status ${project.active ? 'active' : 'inactive'}`;
     }
 }
 
-function loadScripts() {
-    console.log('Refreshing scripts list...');
-    // In a real app, this would fetch updated scripts from the API
-    showToast('Scripts list updated');
+function deleteProject(projectId) {
+    if (confirm('Are you sure you want to delete this project?')) {
+        window.oblivionDashboard?.projects = window.oblivionDashboard.projects.filter(p => p.id !== projectId);
+        const projectCard = document.querySelector(`[onclick="deleteProject(${projectId})"]`).closest('.project-card');
+        projectCard.remove();
+        window.oblivionDashboard?.showNotification('Project deleted successfully', 'success');
+    }
 }
 
-function loadKeys() {
-    console.log('Refreshing keys list...');
-    // In a real app, this would fetch updated keys from the API
-    showToast('Keys list updated');
+function openUserManagement(projectId) {
+    window.oblivionDashboard?.openModal('userManagementModal');
 }
+
+function addWhitelistUser() {
+    window.oblivionDashboard?.addWhitelistUser();
+}
+
+function addBlacklistUser() {
+    window.oblivionDashboard?.addBlacklistUser();
+}
+
+function generatePlanKey(planType) {
+    window.oblivionDashboard?.generatePlanKey(planType);
+}
+
+function showPlans() {
+    window.location.href = 'index.html#plans';
+}
+
+// Initialize dashboard when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    window.oblivionDashboard = new OblivionDashboard();
+});
