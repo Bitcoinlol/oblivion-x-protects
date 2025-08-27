@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Oblivion X Protects</title>
+    <link rel="stylesheet" href="oblivion-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .login-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.3);
+        }
+        
+        .login-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--cyber-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.3);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--secondary-purple) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        }
+        
+        .signup-link {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .signup-link a {
+            color: var(--primary-purple);
+            text-decoration: none;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-home:hover {
+            color: var(--cyber-pink);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+    
+    <div class="login-container">
+        <div class="login-panel">
+            <h1 class="login-title">Login to Oblivion X</h1>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="robloxUsername">Roblox Username</label>
+                    <input type="text" id="robloxUsername" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="discordUsername">Discord Username</label>
+                    <input type="text" id="discordUsername" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="apiKey">API Key</label>
+                    <input type="password" id="apiKey" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+                
+                <div class="signup-link">
+                    Don't have an account? <a href="#" onclick="showSignupPanel()">Sign up here</a>
+                </div>
+                
+                <div class="signup-link">
+                    <a href="#" onclick="showExistingAccountPanel()">Already have an account? Click here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Signup Panel -->
+    <div id="signupPanel" class="login-container" style="display: none;">
+        <div class="login-panel">
+            <h1 class="login-title">Create Account</h1>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupRoblox">Roblox Username</label>
+                    <input type="text" id="signupRoblox" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupDiscord">Discord Username</label>
+                    <input type="text" id="signupDiscord" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupApiKey">API Key</label>
+                    <input type="password" id="signupApiKey" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Create Account</button>
+                <button type="button" class="login-btn" onclick="getFreeTrial()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-bottom: 1rem;">Get Free API Key (30 Days)</button>
+                
+                <div class="signup-link">
+                    Already have an account? <a href="#" onclick="showLoginPanel()">Login here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Existing Account Panel -->
+    <div id="existingAccountPanel" class="login-container" style="display: none;">
+        <div class="login-panel">
+            <h1 class="login-title">Existing Account</h1>
+            
+            <form id="existingAccountForm">
+                <div class="form-group">
+                    <label for="existingApiKey">Enter your API Key</label>
+                    <input type="password" id="existingApiKey" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Login</button>
+                
+                <div class="signup-link">
+                    Need to create an account? <a href="#" onclick="showSignupPanel()">Sign up here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+    
+    <script src="login.js"></script>
+</body>
+</html>

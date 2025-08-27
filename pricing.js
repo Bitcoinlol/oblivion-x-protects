@@ -78,27 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function handlePlanSelection(planName, button) {
-    // Show loading state
-    const originalText = button.textContent;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    button.disabled = true;
+function redirectToPayPal(planName) {
+    const paypalLink = 'https://www.paypal.com/paypalme/VassilisKarakostas7';
+    window.open(paypalLink, '_blank');
+}
 
-    // Simulate payment processing
-    setTimeout(() => {
-        alert(`Redirecting to payment for ${planName} plan...`);
-        
-        // In a real app, this would redirect to Stripe/PayPal/etc.
-        // For demo purposes, we'll just show a success message
-        setTimeout(() => {
-            alert('Payment successful! Welcome to LuaGuard Premium!');
-            // Redirect to dashboard
-            window.location.href = 'dashboard.html';
-        }, 2000);
-        
-        button.textContent = originalText;
-        button.disabled = false;
-    }, 1500);
+function handlePlanSelection(planName, button) {
+    redirectToPayPal(planName);
 }
 
 function createSignupModal() {

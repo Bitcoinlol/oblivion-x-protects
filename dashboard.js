@@ -1,191 +1,579 @@
-// Dashboard JavaScript
+// Dashboard JavaScript for Oblivion X Protects
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar navigation
-    const sidebarItems = document.querySelectorAll('.sidebar-item');
-    const dashboardSections = document.querySelectorAll('.dashboard-section');
-
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            // Remove active class from all items and sections
-            sidebarItems.forEach(i => i.classList.remove('active'));
-            dashboardSections.forEach(s => s.classList.remove('active'));
-            
-            // Add active class to clicked item
-            item.classList.add('active');
-            
-            // Show corresponding section
-            const targetId = item.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-        });
-    });
-
-    // Upload modal functionality
-    const uploadBtns = document.querySelectorAll('button:contains("Upload New Script")');
-    const uploadModal = document.getElementById('uploadModal');
-    
-    // Since :contains() doesn't work in querySelector, we'll find buttons by text content
-    document.querySelectorAll('button').forEach(btn => {
-        if (btn.textContent.includes('Upload New Script')) {
-            btn.addEventListener('click', () => {
-                uploadModal.style.display = 'block';
-            });
-        }
-    });
-
-    // Upload form handling
-    const uploadForm = document.querySelector('.upload-form');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const scriptName = document.getElementById('script-name').value;
-            const scriptFile = document.getElementById('script-file').files[0];
-            const protectionLevel = document.getElementById('protection-level').value;
-            
-            if (!scriptFile) {
-                alert('Please select a Lua file to upload.');
-                return;
-            }
-
-            // Show loading state
-            const submitBtn = uploadForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            submitBtn.disabled = true;
-
-            try {
-                // Read file content
-                const fileContent = await readFileAsText(scriptFile);
-                
-                // Simulate obfuscation
-                const result = await LuaGuardAPI.obfuscateScript(fileContent, protectionLevel);
-                
-                if (result.success) {
-                    alert(`Script "${scriptName}" has been successfully obfuscated and protected!`);
-                    uploadModal.style.display = 'none';
-                    uploadForm.reset();
-                    
-                    // Refresh the scripts list (in a real app, this would fetch from API)
-                    loadScripts();
-                } else {
-                    alert('Failed to obfuscate script. Please try again.');
-                }
-            } catch (error) {
-                alert('Error processing file: ' + error.message);
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-    }
-
-    // Key generation
-    document.querySelectorAll('button').forEach(btn => {
-        if (btn.textContent.includes('Generate New Key')) {
-            btn.addEventListener('click', async () => {
-                const scriptId = prompt('Enter script ID or name:');
-                if (!scriptId) return;
-
-                const duration = prompt('Enter key duration in days (default: 30):', '30');
-                const durationDays = parseInt(duration) || 30;
-
-                try {
-                    const result = await LuaGuardAPI.generateKey(scriptId, durationDays);
-                    if (result.success) {
-                        alert(`New key generated: ${result.key}\nExpires: ${result.expires.toLocaleDateString()}`);
-                        loadKeys();
-                    }
-                } catch (error) {
-                    alert('Failed to generate key: ' + error.message);
-                }
-            });
-        }
-    });
-
-    // Script actions
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('btn-danger') && e.target.textContent === 'Delete') {
-            if (confirm('Are you sure you want to delete this script? This action cannot be undone.')) {
-                e.target.closest('.script-card').remove();
-                showToast('Script deleted successfully');
-            }
-        }
+class OblivionDashboard {
+    constructor() {
+        this.currentUser = this.loadUserData();
+        this.isOwner = this.checkOwnerStatus();
+        this.stats = {
+            whitelistedUsers: 0,
+            blacklistedUsers: 0,
+            scriptsObfuscated: 0,
+            loadstringExecutions: 0
+        };
+        this.projects = [];
+        this.userList = [];
+        this.ipAddresses = [];
+        this.generatedKeys = [];
         
-        if (e.target.classList.contains('btn-danger') && e.target.textContent === 'Revoke') {
-            if (confirm('Are you sure you want to revoke this key?')) {
-                const row = e.target.closest('tr');
-                const statusBadge = row.querySelector('.status-badge');
-                statusBadge.textContent = 'Revoked';
-                statusBadge.className = 'status-badge expired';
-                showToast('Key revoked successfully');
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.updateUserInfo();
+        this.startLiveUpdates();
+        this.loadDashboardData();
+        this.setupOwnerFeatures();
+        this.disableInspectElement();
+    }
+
+    setupEventListeners() {
+        // Tab navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+        });
+
+        // Logout button
+        document.querySelector('.logout-btn')?.addEventListener('click', () => this.logout());
+
+        // Modal controls
+        this.setupModalControls();
+        
+        // Project creation
+        document.querySelector('.create-project-btn')?.addEventListener('click', () => this.openModal('createProjectModal'));
+
+        // File upload for obfuscation
+        this.setupFileUpload();
+
+        // User management
+        this.setupUserManagement();
+
+        // Key generation
+        this.setupKeyGeneration();
+
+        // Discord bot controls
+        this.setupDiscordControls();
+    }
+
+    switchTab(tabName) {
+        // Remove active from all tabs and content
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        // Add active to selected tab and content
+        document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
+        document.getElementById(tabName)?.classList.add('active');
+
+        // Load tab-specific data
+        this.loadTabData(tabName);
+    }
+
+    loadTabData(tabName) {
+        switch(tabName) {
+            case 'dashboard':
+                this.updateDashboardStats();
+                break;
+            case 'projects':
+                this.loadProjects();
+                break;
+            case 'ip-addresses':
+                this.loadIPAddresses();
+                break;
+            case 'status':
+                this.loadStatusCharts();
+                break;
+        }
+    }
+
+    updateUserInfo() {
+        const usernameEl = document.querySelector('.username');
+        const apiExpiryEl = document.querySelector('.api-expiry');
+        const userAvatarEl = document.querySelector('.user-avatar img');
+
+        if (usernameEl) usernameEl.textContent = this.currentUser.username;
+        if (userAvatarEl) userAvatarEl.src = this.currentUser.avatar || `https://ui-avatars.com/api/?name=${this.currentUser.username}&background=a855f7&color=fff`;
+        
+        if (apiExpiryEl && this.currentUser.apiExpiry) {
+            const timeLeft = this.calculateTimeLeft(this.currentUser.apiExpiry);
+            apiExpiryEl.textContent = `API Key expires in ${timeLeft}`;
+        }
+    }
+
+    calculateTimeLeft(expiryDate) {
+        const now = new Date();
+        const expiry = new Date(expiryDate);
+        const diff = expiry - now;
+        
+        if (diff <= 0) return 'Expired';
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        if (days > 0) return `${days}d ${hours}h`;
+        return `${hours}h`;
+    }
+
+    startLiveUpdates() {
+        // Update current time
+        this.updateCurrentTime();
+        setInterval(() => this.updateCurrentTime(), 1000);
+
+        // Update API expiry countdown
+        setInterval(() => this.updateUserInfo(), 60000);
+
+        // Simulate live stats updates
+        setInterval(() => this.updateLiveStats(), 30000);
+    }
+
+    updateCurrentTime() {
+        const timeEl = document.querySelector('.current-time');
+        const dateEl = document.querySelector('.current-date');
+        
+        if (timeEl && dateEl) {
+            const now = new Date();
+            timeEl.textContent = now.toLocaleTimeString();
+            dateEl.textContent = now.toLocaleDateString();
+        }
+    }
+
+    updateLiveStats() {
+        // Simulate random stat updates
+        this.stats.loadstringExecutions += Math.floor(Math.random() * 5);
+        this.stats.scriptsObfuscated += Math.floor(Math.random() * 2);
+        
+        this.updateDashboardStats();
+    }
+
+    updateDashboardStats() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const expiryDateEl = document.querySelector('.expiry-date');
+        const countdownEl = document.querySelector('.expiry-countdown');
+
+        if (statNumbers.length >= 4) {
+            statNumbers[0].textContent = this.stats.whitelistedUsers;
+            statNumbers[1].textContent = this.stats.blacklistedUsers;
+            statNumbers[2].textContent = this.stats.scriptsObfuscated;
+            statNumbers[3].textContent = this.stats.loadstringExecutions;
+        }
+
+        if (expiryDateEl && this.currentUser.apiExpiry) {
+            const expiry = new Date(this.currentUser.apiExpiry);
+            expiryDateEl.textContent = expiry.toLocaleDateString();
+            
+            if (countdownEl) {
+                countdownEl.textContent = `${this.calculateTimeLeft(this.currentUser.apiExpiry)} remaining`;
             }
         }
-    });
+    }
 
-    // File upload drag and drop
-    const fileUpload = document.querySelector('.file-upload');
-    if (fileUpload) {
-        const fileInput = fileUpload.querySelector('input[type="file"]');
-        const fileLabel = fileUpload.querySelector('.file-upload-label');
-
-        fileUpload.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileUpload.classList.add('dragover');
+    setupModalControls() {
+        // Close modal buttons
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal');
+                this.closeModal(modal.id);
+            });
         });
 
-        fileUpload.addEventListener('dragleave', () => {
-            fileUpload.classList.remove('dragover');
+        // Close modal on backdrop click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeModal(modal.id);
+                }
+            });
         });
 
-        fileUpload.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileUpload.classList.remove('dragover');
+        // Form submissions
+        document.getElementById('createProjectForm')?.addEventListener('submit', (e) => this.handleProjectCreation(e));
+        document.getElementById('userManagementForm')?.addEventListener('submit', (e) => this.handleUserManagement(e));
+    }
+
+    openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+        }
+    }
+
+    closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+
+    handleProjectCreation(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const projectData = {
+            name: formData.get('projectName'),
+            description: formData.get('projectDescription'),
+            created: new Date(),
+            id: Date.now()
+        };
+
+        this.projects.push(projectData);
+        this.showNotification('Project created successfully!', 'success');
+        this.closeModal('createProjectModal');
+        e.target.reset();
+        this.loadProjects();
+    }
+
+    loadProjects() {
+        const projectsGrid = document.querySelector('.projects-stats');
+        if (!projectsGrid) return;
+
+        // Update project stats
+        const projectCount = document.querySelector('.projects-stats .stat-number');
+        if (projectCount) projectCount.textContent = this.projects.length;
+    }
+
+    setupFileUpload() {
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('luaFile');
+
+        if (uploadArea && fileInput) {
+            uploadArea.addEventListener('click', () => fileInput.click());
             
-            const files = e.dataTransfer.files;
-            if (files.length > 0 && files[0].name.endsWith('.lua')) {
-                fileInput.files = files;
-                fileLabel.innerHTML = `<i class="fas fa-file-code"></i> ${files[0].name}`;
-            } else {
-                alert('Please upload a .lua file');
-            }
-        });
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--primary-purple)';
+            });
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                fileLabel.innerHTML = `<i class="fas fa-file-code"></i> ${e.target.files[0].name}`;
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.borderColor = 'var(--border-color)';
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--border-color)';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].name.endsWith('.lua')) {
+                    fileInput.files = files;
+                    this.handleFileUpload(files[0]);
+                } else {
+                    this.showNotification('Please upload a .lua file', 'error');
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    this.handleFileUpload(e.target.files[0]);
+                }
+            });
+        }
+
+        // Obfuscate button
+        document.querySelector('.btn-primary')?.addEventListener('click', () => this.processObfuscation());
+    }
+
+    handleFileUpload(file) {
+        const uploadText = document.querySelector('.upload-area p');
+        if (uploadText) {
+            uploadText.innerHTML = `<i class="fas fa-file-code"></i> ${file.name} selected`;
+        }
+
+        // Update progress steps
+        this.updateProgressStep(1);
+    }
+
+    updateProgressStep(step) {
+        document.querySelectorAll('.step').forEach((el, index) => {
+            if (index < step) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
             }
         });
     }
 
-    // Real-time search for keys table
-    const searchInput = document.getElementById('keySearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const tableRows = document.querySelectorAll('.keys-table tbody tr');
+    async processObfuscation() {
+        const fileInput = document.getElementById('luaFile');
+        if (!fileInput.files.length) {
+            this.showNotification('Please select a Lua file first', 'error');
+            return;
+        }
+
+        this.updateProgressStep(2);
+        this.showNotification('Processing obfuscation...', 'info');
+
+        // Simulate obfuscation process
+        setTimeout(() => {
+            this.updateProgressStep(3);
+            this.stats.scriptsObfuscated++;
+            this.showNotification('Script obfuscated successfully!', 'success');
             
-            tableRows.forEach(row => {
-                const keyCell = row.querySelector('.key-cell');
-                const scriptCell = row.cells[1];
-                const userCell = row.cells[2];
-                
-                const matches = keyCell.textContent.toLowerCase().includes(searchTerm) ||
-                               scriptCell.textContent.toLowerCase().includes(searchTerm) ||
-                               userCell.textContent.toLowerCase().includes(searchTerm);
-                
-                row.style.display = matches ? '' : 'none';
+            // Generate loadstring
+            const loadstring = this.generateLoadstring();
+            this.displayLoadstring(loadstring);
+        }, 2000);
+    }
+
+    generateLoadstring() {
+        const randomId = Math.random().toString(36).substr(2, 9);
+        return `loadstring(game:HttpGet("https://oblivionx.protects/api/script/${randomId}"))()`;
+    }
+
+    displayLoadstring(loadstring) {
+        // Create and show loadstring result
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'obfuscation-result';
+        resultDiv.innerHTML = `
+            <h4>Protected Loadstring Generated:</h4>
+            <div class="loadstring-output">
+                <code>${loadstring}</code>
+                <button class="copy-btn" onclick="navigator.clipboard.writeText('${loadstring}')">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+        `;
+        
+        document.querySelector('.obfuscation-container').appendChild(resultDiv);
+    }
+
+    setupUserManagement() {
+        document.querySelector('.manage-users-btn')?.addEventListener('click', () => this.openModal('userManagementModal'));
+    }
+
+    handleUserManagement(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const action = formData.get('action');
+        const userId = formData.get('userId');
+
+        if (action === 'whitelist') {
+            this.stats.whitelistedUsers++;
+            this.showNotification(`User ${userId} whitelisted successfully!`, 'success');
+        } else if (action === 'blacklist') {
+            this.stats.blacklistedUsers++;
+            this.showNotification(`User ${userId} blacklisted successfully!`, 'success');
+        }
+
+        this.updateDashboardStats();
+        this.closeModal('userManagementModal');
+        e.target.reset();
+    }
+
+    setupKeyGeneration() {
+        if (!this.isOwner) return;
+
+        document.querySelectorAll('.plan-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.plan-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            });
+        });
+
+        document.querySelector('.generate-key-btn')?.addEventListener('click', () => this.generateAPIKey());
+    }
+
+    generateAPIKey() {
+        const selectedPlan = document.querySelector('.plan-option.selected');
+        if (!selectedPlan) {
+            this.showNotification('Please select a plan first', 'error');
+            return;
+        }
+
+        const duration = selectedPlan.querySelector('.plan-duration').textContent;
+        const key = this.createAPIKey(duration);
+        
+        this.generatedKeys.push({
+            key: key,
+            duration: duration,
+            created: new Date(),
+            status: 'active'
+        });
+
+        this.displayGeneratedKey(key, duration);
+        this.showNotification('API Key generated successfully!', 'success');
+    }
+
+    createAPIKey(duration) {
+        const prefix = 'OX';
+        const segments = [];
+        for (let i = 0; i < 4; i++) {
+            segments.push(Math.random().toString(36).substr(2, 4).toUpperCase());
+        }
+        return `${prefix}-${segments.join('-')}`;
+    }
+
+    displayGeneratedKey(key, duration) {
+        const keysContainer = document.querySelector('.generated-keys');
+        if (!keysContainer) return;
+
+        const keyItem = document.createElement('div');
+        keyItem.className = 'key-item';
+        keyItem.innerHTML = `
+            <div>
+                <div class="key-value">${key}</div>
+                <small>Duration: ${duration}</small>
+            </div>
+            <button class="copy-key-btn" onclick="navigator.clipboard.writeText('${key}')">
+                <i class="fas fa-copy"></i> Copy
+            </button>
+        `;
+        
+        keysContainer.appendChild(keyItem);
+    }
+
+    setupDiscordControls() {
+        // Placeholder for Discord bot integration
+        document.querySelectorAll('.control-card button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.showNotification('Discord bot feature coming soon!', 'info');
             });
         });
     }
 
-    // Load initial data
-    loadDashboardData();
+    loadIPAddresses() {
+        // Simulate IP address data
+        this.ipAddresses = [
+            { ip: '192.168.1.100', location: 'New York, US', lastLogin: '2 minutes ago', status: 'current' },
+            { ip: '10.0.0.45', location: 'London, UK', lastLogin: '1 hour ago', status: 'recent' },
+            { ip: '172.16.0.23', location: 'Tokyo, JP', lastLogin: '1 day ago', status: 'recent' }
+        ];
+
+        this.updateIPList();
+    }
+
+    updateIPList() {
+        const ipList = document.querySelector('.ip-list');
+        if (!ipList) return;
+
+        ipList.innerHTML = this.ipAddresses.map(ip => `
+            <div class="ip-item">
+                <span class="ip-address">${ip.ip}</span>
+                <span class="location">${ip.location}</span>
+                <span class="last-login">${ip.lastLogin}</span>
+                <span class="status-badge status-${ip.status}">${ip.status}</span>
+            </div>
+        `).join('');
+    }
+
+    loadStatusCharts() {
+        // Placeholder for charts - in a real app, you'd integrate Chart.js or similar
+        document.querySelectorAll('.chart-placeholder').forEach(placeholder => {
+            placeholder.textContent = 'Chart data loading...';
+        });
+    }
+
+    loadUserData() {
+        // Load from localStorage or API
+        const userData = localStorage.getItem('oblivion_user');
+        if (userData) {
+            return JSON.parse(userData);
+        }
+
+        // Default user data
+        return {
+            username: 'User123',
+            apiKey: localStorage.getItem('freeTrialKey') || 'OX-DEMO-KEY',
+            apiExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            avatar: null
+        };
+    }
+
+    checkOwnerStatus() {
+        const apiKey = this.currentUser.apiKey;
+        return apiKey && (apiKey.startsWith('OWNER-') || apiKey === 'OWNER-MASTER-KEY-2024');
+    }
+
+    setupOwnerFeatures() {
+        const ownerTab = document.querySelector('[data-tab="generate-keys"]');
+        if (ownerTab) {
+            ownerTab.style.display = this.isOwner ? 'flex' : 'none';
+        }
+    }
+
+    logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('oblivion_user');
+            localStorage.removeItem('freeTrialKey');
+            window.location.href = 'login.html';
+        }
+    }
+
+    showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}"></i>
+            <span>${message}</span>
+        `;
+
+        // Add notification styles if not present
+        if (!document.querySelector('#notification-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'notification-styles';
+            styles.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    padding: 1rem 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    z-index: 10000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                    min-width: 300px;
+                }
+                .notification.show { transform: translateX(0); }
+                .notification-success { border-color: #22c55e; color: #22c55e; }
+                .notification-error { border-color: #ef4444; color: #ef4444; }
+                .notification-info { border-color: var(--primary-purple); color: var(--primary-purple); }
+            `;
+            document.head.appendChild(styles);
+        }
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => notification.classList.add('show'), 100);
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    disableInspectElement() {
+        // Disable right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Disable common inspect shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                this.showNotification('Developer tools are disabled for security', 'error');
+            }
+        });
+    }
+
+    loadDashboardData() {
+        // Simulate loading data
+        setTimeout(() => {
+            this.stats = {
+                whitelistedUsers: Math.floor(Math.random() * 100),
+                blacklistedUsers: Math.floor(Math.random() * 20),
+                scriptsObfuscated: Math.floor(Math.random() * 500),
+                loadstringExecutions: Math.floor(Math.random() * 10000)
+            };
+            this.updateDashboardStats();
+        }, 1000);
+    }
+}
+
+// Initialize dashboard when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.oblivionDashboard = new OblivionDashboard();
 });
 
 // Helper functions

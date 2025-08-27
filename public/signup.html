@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - LuaGuard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .signup-container {
+            max-width: 500px;
+            margin: 120px auto 60px;
+            padding: 2rem;
+            background: var(--dark-gray);
+            border-radius: 16px;
+            border: 1px solid var(--medium-gray);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .signup-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .signup-header p {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+        }
+        
+        .trial-badge {
+            display: inline-block;
+            background: var(--gradient);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+            background: var(--black);
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--light-gray);
+        }
+        
+        .form-footer a {
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .terms-checkbox input {
+            margin-top: 0.3rem;
+        }
+        
+        .terms-checkbox label {
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+        
+        .terms-checkbox a {
+            color: var(--primary-purple);
+            text-decoration: none;
+        }
+        
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>LuaGuard</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="https://discord.gg/tKF8gCw5qp" class="nav-link discord-link" target="_blank">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+                <a href="login.html" class="nav-btn login-btn">Login</a>
+                <a href="signup.html" class="nav-btn signup-btn active">Sign Up</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Signup Form -->
+    <div class="signup-container">
+        <div class="signup-header">
+            <h1>Create Your Account</h1>
+            <div class="trial-badge">
+                <i class="fas fa-gift"></i> 30-Day Free Trial
+            </div>
+            <p>Get full access to LuaGuard for 30 days, no credit card required</p>
+        </div>
+        
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            
+            <div class="terms-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Start Your Free Trial</button>
+            
+            <p class="form-footer">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>LuaGuard</span>
+                    </div>
+                    <p>Advanced Lua script protection and monetization platform.</p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/tKF8gCw5qp" target="_blank">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#documentation">Documentation</a></li>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                        <li><a href="https://discord.gg/tKF8gCw5qp" target="_blank">Discord Support</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#security">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LuaGuard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+
+            // Form submission
+            const signupForm = document.getElementById('signupForm');
+            
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Processing...';
+                submitBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Redirect to dashboard with success message
+                    localStorage.setItem('trialActive', 'true');
+                    localStorage.setItem('trialStartDate', new Date().toISOString());
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('userEmail', email);
+                    
+                    window.location.href = 'dashboard.html?signup=success';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

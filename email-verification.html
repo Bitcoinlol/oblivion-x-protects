@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - LuaGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--black);
+        }
+
+        .verification-container {
+            background: var(--dark-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .verification-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .verification-header h2 {
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .verification-text {
+            color: var(--light-gray);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .email-highlight {
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+
+        .verification-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-purple);
+            border: 2px solid var(--primary-purple);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            margin-top: 2rem;
+            color: var(--light-gray);
+        }
+
+        .back-link a {
+            color: var(--primary-purple);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <div class="verification-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/>
+                <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+        
+        <div class="verification-header">
+            <h2>Check your email</h2>
+            <p class="verification-text">
+                We sent a verification link to<br>
+                <span class="email-highlight" id="userEmail">your email address</span>
+            </p>
+            <p class="verification-text">
+                Please click the verification button in the email to authorize your account.
+            </p>
+        </div>
+
+        <div class="verification-actions">
+            <button class="btn btn-primary" onclick="simulateEmailVerification()">
+                Simulate Email Verification (Demo)
+            </button>
+            <button class="btn btn-secondary" onclick="resendEmail()">
+                Resend Email
+            </button>
+        </div>
+
+        <div class="back-link">
+            Didn't receive the email? Check your spam folder or <a href="signup.html">try again</a>
+        </div>
+    </div>
+
+    <script>
+        // Display the user's email from signup
+        const pendingUser = JSON.parse(localStorage.getItem('pendingUser') || '{}');
+        if (pendingUser.email) {
+            document.getElementById('userEmail').textContent = pendingUser.email;
+        }
+
+        function simulateEmailVerification() {
+            // Simulate email verification process
+            const userData = JSON.parse(localStorage.getItem('pendingUser') || '{}');
+            userData.verified = true;
+            localStorage.setItem('verifiedUser', JSON.stringify(userData));
+            localStorage.removeItem('pendingUser');
+            
+            // Redirect to authorization success page
+            window.location.href = 'account-authorized.html';
+        }
+
+        function resendEmail() {
+            // Simulate resending email
+            alert('Verification email resent! Please check your inbox.');
+        }
+
+        // Auto-send email simulation
+        window.addEventListener('load', () => {
+            const userData = JSON.parse(localStorage.getItem('pendingUser') || '{}');
+            if (userData.email) {
+                // Simulate sending email to cjswrlds@gmail.com
+                console.log(`Verification email sent to: ${userData.email}`);
+                console.log('Email also sent to admin: cjswrlds@gmail.com');
+                console.log('Email content: Please verify this user account - ' + userData.email);
+            }
+        });
+    </script>
+</body>
+</html>

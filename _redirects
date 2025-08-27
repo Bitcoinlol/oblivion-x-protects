@@ -1,0 +1,7 @@
+# Netlify redirects file for SPA-like behavior
+/dashboard /dashboard.html 200
+/login /login.html 200
+/pricing /pricing.html 200
+
+# Fallback for any unmatched routes
+/* /index.html 404

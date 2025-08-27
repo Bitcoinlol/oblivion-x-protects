@@ -143,6 +143,18 @@ input:checked + .slider:before {
     box-shadow: var(--shadow);
 }
 
+.plan-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--white);
+}
+
 .plan-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -192,13 +204,17 @@ input:checked + .slider:before {
     border-bottom: none;
 }
 
-.feature i {
-    width: 20px;
+.feature svg {
+    width: 16px;
+    height: 16px;
     color: var(--primary-purple);
+    stroke: var(--primary-purple);
+    flex-shrink: 0;
 }
 
-.feature.disabled i {
+.feature.disabled svg {
     color: var(--light-gray);
+    stroke: var(--light-gray);
 }
 
 .feature span {

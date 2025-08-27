@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Authorized - LuaGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--black);
+        }
+
+        .auth-container {
+            background: var(--dark-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+            color: var(--white);
+            animation: successPulse 2s infinite;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .auth-header h2 {
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .auth-text {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: var(--gradient);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .countdown {
+            margin-top: 2rem;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="success-icon">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        
+        <div class="auth-header">
+            <h2>Account Authorized</h2>
+            <p class="auth-text">
+                Your account has been successfully verified!<br>
+                You can now access your LuaGuard dashboard.
+            </p>
+        </div>
+
+        <button class="btn" onclick="redirectToDashboard()">
+            Access Dashboard
+        </button>
+
+        <div class="countdown">
+            Redirecting automatically in <span id="countdown">5</span> seconds...
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect countdown
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                redirectToDashboard();
+            }
+        }, 1000);
+
+        function redirectToDashboard() {
+            // Move verified user data to logged in state
+            const userData = JSON.parse(localStorage.getItem('verifiedUser') || '{}');
+            if (userData.email) {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.removeItem('verifiedUser');
+            }
+            
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
